@@ -340,7 +340,6 @@
 .header-center {
   flex: 1;
   display: flex;
-  justify-content: center;
 }
 
 .header-right {
@@ -418,7 +417,6 @@
   }
   
   .header-left,
-  .header-center,
   .header-right {
     width: 100%;
     justify-content: center;

@@ -38,6 +38,9 @@ const BoardViewer: React.FC = () => {
       if (!response.ok) throw new Error('Failed to fetch board files');
       const files = await response.json();
       setBoardFiles(files);
+      if (!selectedBoard && files?.[0]) {
+        handleBoardSelect(files[0].path);
+      }
     } catch (err) {
       setError('Failed to load board files');
     }
