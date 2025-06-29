@@ -1,0 +1,122 @@
+# This file includes features that are not yet implemented, such as sprintInfo, historical data, and calculated fields.
+
+configuration:
+  name: "Team Sprint Board"
+  description: "Sprint 23 - Q1 2024 deliverables"
+  columns:
+    - name: "backlog"
+    - name: "todo"
+    - name: "doing"
+    - name: "testing"
+    - name: "done"
+  labels:
+    - name: "frontend"
+    - name: "backend"
+    - name: "database"
+    - name: "testing"
+    - name: "critical"
+    - name: "enhancement"
+  sprintInfo:
+    number: 23
+    startDate: "2024-01-22T00:00:00Z"
+    endDate: "2024-02-05T23:59:59Z"
+    capacity: 40
+    commitment: 35
+
+tasks:
+  101:
+    title: "User dashboard redesign"
+    description: "Redesign the main user dashboard with new layout and improved UX"
+    status: "doing"
+    labels: ["frontend", "enhancement"]
+    assignee: "sarah"
+    storyPoints: 8
+    created: "2024-01-20T10:30:00Z"
+    updated: "2024-01-24T15:45:00Z"
+  102:
+    title: "Database migration script"
+    description: "Create migration script to update user table schema"
+    status: "done"
+    labels: ["database", "critical"]
+    assignee: "alex"
+    storyPoints: 5
+    created: "2024-01-19T14:20:00Z"
+    updated: "2024-01-23T09:15:00Z"
+    completed: "2024-01-23T09:15:00Z"
+  103:
+    title: "API rate limiting"
+    description: "Implement rate limiting for all public API endpoints"
+    status: "testing"
+    labels: ["backend", "critical"]
+    assignee: "mike"
+    storyPoints: 3
+    created: "2024-01-21T11:00:00Z"
+    updated: "2024-01-25T16:30:00Z"
+  104:
+    title: "Mobile app crash fix"
+    description: "Fix crash when opening profile page on Android devices"
+    status: "todo"
+    labels: ["frontend", "critical"]
+    assignee: "sarah"
+    storyPoints: 2
+    created: "2024-01-25T09:45:00Z"
+    updated: "2024-01-25T09:45:00Z"
+  105:
+    title: "Performance monitoring setup"
+    description: "Set up APM monitoring for production environment"
+    status: "backlog"
+    labels: ["backend", "enhancement"]
+    assignee: null
+    storyPoints: 5
+    created: "2024-01-18T13:30:00Z"
+    updated: "2024-01-18T13:30:00Z"
+  106:
+    title: "Unit test coverage improvement"
+    description: "Increase unit test coverage to 85% for core modules"
+    status: "todo"
+    labels: ["testing", "enhancement"]
+    assignee: "alex"
+    storyPoints: 8
+    created: "2024-01-22T08:15:00Z"
+    updated: "2024-01-22T08:15:00Z"
+  107:
+    title: "User notification system"
+    description: "Implement in-app and email notifications for user actions"
+    status: "doing"
+    labels: ["backend", "frontend"]
+    assignee: "mike"
+    storyPoints: 13
+    created: "2024-01-16T16:00:00Z"
+    updated: "2024-01-24T12:20:00Z"
+
+metadata:
+  nextId: 108
+  createdAt: "2024-01-15T00:00:00Z"
+  lastModified: "2024-01-25T16:30:00Z"
+  version: "2.1"
+
+calculated:
+  lastCalculated: "2024-01-25T16:30:00Z"
+  totalTasks: 7
+  taskCounts:
+    backlog: 1
+    todo: 2
+    doing: 2
+    testing: 1
+    done: 1
+  storyPointsTotal: 44
+  storyPointsCompleted: 5
+
+historical:
+  - date: "2024-01-22"
+    burndown:
+      remaining: 44
+  - date: "2024-01-23"
+    burndown:
+      remaining: 39
+  - date: "2024-01-24"
+    burndown:
+      remaining: 39
+  - date: "2024-01-25"
+    burndown:
+      remaining: 39

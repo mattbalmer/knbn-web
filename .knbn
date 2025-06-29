@@ -1,0 +1,28 @@
+configuration:
+  name: KnBn Web
+  description: Development board for the KnBn Web viewer
+  columns:
+    - name: backlog
+    - name: todo
+    - name: working
+    - name: done
+  milestones:
+    - name: Alpha
+      startDate: '2025-06-01T00:00:00Z'
+      endDate: null
+      description: Initial alpha release with basic features
+tasks:
+  '1':
+    id: 1
+    title: Remove CWD print
+    description: ''
+    status: done
+    dates:
+      created: '2025-06-29T18:56:24.822Z'
+      updated: '2025-06-29T18:59:00.000Z'
+      moved: '2025-06-29T18:59:00.000Z'
+metadata:
+  nextId: 2
+  createdAt: '2025-06-29T00:00:00Z'
+  lastModified: '2025-06-29T18:56:24.822Z'
+  version: '0.1'
