@@ -6,7 +6,6 @@ configuration:
     - name: todo
     - name: working
     - name: done
-
 sprints:
   - name: Alpha
     description: Initial alpha release with basic features
@@ -14,7 +13,6 @@ sprints:
       created: '2025-06-01T00:00:00Z'
       starts: '2025-06-01T00:00:00Z'
       ends: "2025-06-08T23:59:59Z"
-
 tasks:
   '1':
     id: 1
@@ -29,14 +27,13 @@ tasks:
     id: 2
     title: Some other thing
     description: ''
-    column: backlog
+    column: done
     dates:
       created: '2025-06-29T18:56:24.822Z'
-      updated: '2025-06-29T18:59:00.000Z'
-      moved: '2025-06-29T18:59:00.000Z'
-
+      updated: '2025-06-29T22:26:58.265Z'
+      moved: '2025-06-29T22:26:58.265Z'
 metadata:
   nextId: 3
   createdAt: '2025-06-29T00:00:00Z'
-  lastModified: '2025-06-29T18:56:24.822Z'
+  lastModified: '2025-06-29T22:26:58.265Z'
   version: '0.1'
