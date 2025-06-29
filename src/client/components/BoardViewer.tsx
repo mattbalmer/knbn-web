@@ -1,12 +1,33 @@
 import React, { useState, useEffect } from 'react';
+import KanbanBoard from './KanbanBoard';
+
+interface Task {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  created: string;
+  updated: string;
+  assignee?: string;
+  completed?: string;
+}
+
+interface Column {
+  name: string;
+}
 
 interface Board {
-  config: {
-    columns: string[];
+  configuration: {
+    name: string;
+    description?: string;
+    columns: Column[];
   };
-  tasks: Record<string, any>;
+  tasks: Record<string, Task>;
   metadata: {
     nextId: number;
+    createdAt: string;
+    lastModified: string;
+    version: string;
   };
 }
 
@@ -130,25 +151,7 @@ const BoardViewer: React.FC = () => {
       {loading && <p>Loading board content...</p>}
 
       {boardContent && !loading && (
-        <div>
-          <h2>Board Content</h2>
-          <div style={{
-            backgroundColor: '#f5f5f5',
-            padding: '15px',
-            borderRadius: '4px',
-            border: '1px solid #ddd',
-            overflow: 'auto'
-          }}>
-            <pre style={{ 
-              margin: 0, 
-              fontSize: '12px',
-              lineHeight: '1.4',
-              whiteSpace: 'pre-wrap'
-            }}>
-              {JSON.stringify(boardContent, null, 2)}
-            </pre>
-          </div>
-        </div>
+        <KanbanBoard board={boardContent} />
       )}
     </div>
   );
