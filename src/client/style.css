@@ -243,6 +243,82 @@
   font-weight: 500;
 }
 
+/* Version Tooltip Styles */
+.version-tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.version-info-button {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.version-info-button:hover {
+  background: #0056b3;
+  transform: scale(1.1);
+}
+
+.version-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 1000;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.version-tooltip-content {
+  background: #333;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  position: relative;
+}
+
+.version-tooltip-content::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 8px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #333;
+}
+
+.version-item {
+  margin: 4px 0;
+}
+
+.version-item:first-child {
+  margin-top: 0;
+}
+
+.version-item:last-child {
+  margin-bottom: 0;
+}
+
+.version-item strong {
+  color: #ccc;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .board-columns {

@@ -4,6 +4,7 @@ import TabNavigation, { TabType } from './TabNavigation';
 import BacklogTab from './BacklogTab';
 import SprintTab from './SprintTab';
 import ManageTab from './ManageTab';
+import VersionTooltip from './VersionTooltip';
 import { Board } from '../knbn/types';
 
 interface BoardFile {
@@ -114,18 +115,7 @@ const BoardViewer: React.FC = () => {
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <h1>KnBn Board Viewer</h1>
-        {versionInfo && (
-          <div style={{ 
-            fontSize: '12px', 
-            color: '#666',
-            textAlign: 'right',
-            lineHeight: '1.4'
-          }}>
-            <div>KnBn Core v{versionInfo.knbnCore}</div>
-            <div>KnBn Board v{versionInfo.knbnBoard}</div>
-            <div>KnBn Web v{versionInfo.knbnWeb}</div>
-          </div>
-        )}
+        <VersionTooltip versionInfo={versionInfo} />
       </div>
       
       <div style={{ marginBottom: '20px' }}>
