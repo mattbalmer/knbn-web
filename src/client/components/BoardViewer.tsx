@@ -113,30 +113,38 @@ const BoardViewer: React.FC = () => {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h1>KnBn Board Viewer</h1>
-        <VersionTooltip versionInfo={versionInfo} />
-      </div>
-      
-      <div style={{ marginBottom: '20px' }}>
-        <h2>Select Board File</h2>
-        {boardFiles.length === 0 ? (
-          <p>No .knbn files found in current directory</p>
-        ) : (
-          <select 
-            value={selectedBoard} 
-            onChange={(e) => handleBoardSelect(e.target.value)}
-            style={{ padding: '8px', fontSize: '14px', minWidth: '200px' }}
-          >
-            <option value="">-- Select a board file --</option>
-            {boardFiles.map((file) => (
-              <option key={file.path} value={file.path}>
-                {file.name}
-              </option>
-            ))}
-          </select>
-        )}
-      </div>
+      <header className="app-header">
+        <div className="header-left">
+          <h1 className="app-title">KnBn Board Viewer</h1>
+        </div>
+        
+        <div className="header-center">
+          <div className="board-selector">
+            <span className="board-selector-label">Board:</span>
+            {boardFiles.length === 0 ? (
+              <select disabled>
+                <option>No .knbn files found</option>
+              </select>
+            ) : (
+              <select 
+                value={selectedBoard} 
+                onChange={(e) => handleBoardSelect(e.target.value)}
+              >
+                <option value="">-- Select a board file --</option>
+                {boardFiles.map((file) => (
+                  <option key={file.path} value={file.path}>
+                    {file.name}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+        </div>
+        
+        <div className="header-right">
+          <VersionTooltip versionInfo={versionInfo} />
+        </div>
+      </header>
 
       {error && (
         <div style={{ 
