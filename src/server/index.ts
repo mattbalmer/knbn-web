@@ -61,12 +61,13 @@ export function startServer(port: number = 9000): void {
           <title>KnBn Board Viewer</title>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="/static/reset.css">
           <link rel="stylesheet" href="/static/styles.css">
       </head>
       <body>
           <div id="root"></div>
-          <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-          <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+          <script src="/static/react.production.min.js"></script>
+          <script src="/static/react-dom.production.min.js"></script>
           <script src="/static/bundle.js"></script>
       </body>
       </html>
