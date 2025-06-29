@@ -25,9 +25,18 @@ tasks:
       created: '2025-06-29T18:56:24.822Z'
       updated: '2025-06-29T18:59:00.000Z'
       moved: '2025-06-29T18:59:00.000Z'
+  '2':
+    id: 2
+    title: Some other thing
+    description: ''
+    column: backlog
+    dates:
+      created: '2025-06-29T18:56:24.822Z'
+      updated: '2025-06-29T18:59:00.000Z'
+      moved: '2025-06-29T18:59:00.000Z'
 
 metadata:
-  nextId: 2
+  nextId: 3
   createdAt: '2025-06-29T00:00:00Z'
   lastModified: '2025-06-29T18:56:24.822Z'
   version: '0.1'

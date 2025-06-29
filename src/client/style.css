@@ -162,6 +162,70 @@
   border-left-color: #28a745; /* Green for done */
 }
 
+/* Tab Navigation Styles */
+.tab-navigation {
+  display: flex;
+  border-bottom: 2px solid #e9ecef;
+  margin-bottom: 20px;
+  gap: 2px;
+}
+
+.tab-button {
+  padding: 12px 24px;
+  background: #f8f9fa;
+  border: none;
+  border-top: 2px solid transparent;
+  border-left: 1px solid #e9ecef;
+  border-right: 1px solid #e9ecef;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6c757d;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.tab-button:first-child {
+  border-left: none;
+  border-top-left-radius: 4px;
+}
+
+.tab-button:last-child {
+  border-right: none;
+  border-top-right-radius: 4px;
+}
+
+.tab-button:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.tab-button.active {
+  background: white;
+  color: #007bff;
+  border-top-color: #007bff;
+  border-bottom: 2px solid white;
+  margin-bottom: -2px;
+  font-weight: 600;
+}
+
+.tab-content {
+  min-height: 400px;
+}
+
+.tab-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  background: #f8f9fa;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  color: #6c757d;
+  font-size: 18px;
+  font-weight: 500;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .board-columns {
@@ -174,5 +238,16 @@
   
   .kanban-board {
     padding: 10px;
+  }
+  
+  .tab-navigation {
+    flex-wrap: wrap;
+  }
+  
+  .tab-button {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px 16px;
+    font-size: 13px;
   }
 }

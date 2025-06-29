@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import KanbanBoard from './KanbanBoard';
+import TabNavigation, { TabType } from './TabNavigation';
+import BacklogTab from './BacklogTab';
+import SprintTab from './SprintTab';
+import ManageTab from './ManageTab';
 import { Board } from '../knbn/types';
 
 interface BoardFile {
@@ -20,6 +24,7 @@ const BoardViewer: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
+  const [activeTab, setActiveTab] = useState<TabType>('all-tasks');
 
   useEffect(() => {
     fetchBoardFiles();
@@ -66,6 +71,23 @@ const BoardViewer: React.FC = () => {
   const handleBoardSelect = (boardPath: string) => {
     setSelectedBoard(boardPath);
     fetchBoardContent(boardPath);
+  };
+
+  const renderTabContent = () => {
+    if (!boardContent) return null;
+    
+    switch (activeTab) {
+      case 'backlog':
+        return <BacklogTab />;
+      case 'sprint':
+        return <SprintTab />;
+      case 'all-tasks':
+        return <KanbanBoard board={boardContent} />;
+      case 'manage':
+        return <ManageTab />;
+      default:
+        return <KanbanBoard board={boardContent} />;
+    }
   };
 
   return (
@@ -122,7 +144,15 @@ const BoardViewer: React.FC = () => {
       {loading && <p>Loading board content...</p>}
 
       {boardContent && !loading && (
-        <KanbanBoard board={boardContent} />
+        <div>
+          <TabNavigation 
+            activeTab={activeTab} 
+            onTabChange={setActiveTab} 
+          />
+          <div className="tab-content">
+            {renderTabContent()}
+          </div>
+        </div>
       )}
     </div>
   );
