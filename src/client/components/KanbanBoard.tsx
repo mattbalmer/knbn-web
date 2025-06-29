@@ -1,34 +1,5 @@
 import React from 'react';
-
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  status: string;
-  created: string;
-  updated: string;
-  assignee?: string;
-  completed?: string;
-}
-
-interface Column {
-  name: string;
-}
-
-interface Board {
-  configuration: {
-    name: string;
-    description?: string;
-    columns: Column[];
-  };
-  tasks: Record<string, Task>;
-  metadata: {
-    nextId: number;
-    createdAt: string;
-    lastModified: string;
-    version: string;
-  };
-}
+import { Board, Task } from '../knbn/types';
 
 interface KanbanBoardProps {
   board: Board;
@@ -79,16 +50,16 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board }) => {
                   <div className="task-meta">
                     <div className="task-dates">
                       <span className="created-date">
-                        Created: {formatDate(task.created)}
+                        Created: {formatDate(task.dates.created)}
                       </span>
-                      {task.updated !== task.created && (
+                      {task.dates.updated !== task.dates.created && (
                         <span className="updated-date">
-                          Updated: {formatDate(task.updated)}
+                          Updated: {formatDate(task.dates.updated)}
                         </span>
                       )}
-                      {task.completed && (
-                        <span className="completed-date">
-                          Completed: {formatDate(task.completed)}
+                      {task.dates.moved && (
+                        <span className="moved-date">
+                          Moved: {formatDate(task.dates.moved)}
                         </span>
                       )}
                     </div>

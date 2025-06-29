@@ -1,35 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import KanbanBoard from './KanbanBoard';
-
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  status: string;
-  created: string;
-  updated: string;
-  assignee?: string;
-  completed?: string;
-}
-
-interface Column {
-  name: string;
-}
-
-interface Board {
-  configuration: {
-    name: string;
-    description?: string;
-    columns: Column[];
-  };
-  tasks: Record<string, Task>;
-  metadata: {
-    nextId: number;
-    createdAt: string;
-    lastModified: string;
-    version: string;
-  };
-}
+import { Board } from '../knbn/types';
 
 interface BoardFile {
   name: string;

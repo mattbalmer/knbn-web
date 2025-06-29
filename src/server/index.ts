@@ -62,7 +62,7 @@ export function startServer(port: number = 9000): void {
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <link rel="stylesheet" href="/static/reset.css">
-          <link rel="stylesheet" href="/static/styles.css">
+          <link rel="stylesheet" href="/static/style.css">
       </head>
       <body>
           <div id="root"></div>

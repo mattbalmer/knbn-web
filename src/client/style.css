@@ -1,6 +1,5 @@
 /* Kanban Board Styles */
 .kanban-board {
-  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -140,7 +139,7 @@
   color: #ffc107;
 }
 
-.completed-date {
+.moved-date {
   color: #dc3545;
   font-weight: bold;
 }
