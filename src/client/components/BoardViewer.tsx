@@ -17,7 +17,8 @@ interface BoardFile {
 
 interface VersionInfo {
   knbnWeb: string;
-  knbn: string;
+  knbnCore: string;
+  knbnBoard: string;
 }
 
 const BoardViewer: React.FC = () => {
@@ -86,8 +87,9 @@ const BoardViewer: React.FC = () => {
             textAlign: 'right',
             lineHeight: '1.4'
           }}>
+            <div>KnBn Core v{versionInfo.knbnCore}</div>
+            <div>KnBn Board v{versionInfo.knbnBoard}</div>
             <div>KnBn Web v{versionInfo.knbnWeb}</div>
-            <div>KnBn v{versionInfo.knbn}</div>
           </div>
         )}
       </div>

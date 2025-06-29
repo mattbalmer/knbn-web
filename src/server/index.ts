@@ -1,11 +1,8 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
-import { loadBoard } from './knbn';
-
-// Load version info
-const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '../../package.json'), 'utf8'));
-const knbnPackageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '../../node_modules/knbn/package.json'), 'utf8'));
+import { loadBoard, KNBN_CORE_VERSION, KNBN_BOARD_VERSION } from './knbn';
+import { version as KNBN_WEB_VERSION } from '../../package.json';
 
 export function startServer(port: number = 9000): void {
   const app = express();
@@ -18,8 +15,9 @@ export function startServer(port: number = 9000): void {
   // API endpoint to get version information
   app.get('/api/version', (req, res) => {
     res.json({
-      knbnWeb: packageJson.version,
-      knbn: knbnPackageJson.version
+      knbnWeb: KNBN_WEB_VERSION,
+      knbnCore: KNBN_CORE_VERSION,
+      knbnBoard: KNBN_BOARD_VERSION,
     });
   });
 
@@ -76,5 +74,8 @@ export function startServer(port: number = 9000): void {
 
   app.listen(port, () => {
     console.log(`KnBn server running at http://localhost:${port}`);
+    console.log(` - Core Version: ${KNBN_CORE_VERSION}`);
+    console.log(` - Board Version: ${KNBN_BOARD_VERSION}`);
+    console.log(` - Web Version: ${KNBN_WEB_VERSION}`);
   });
 }
