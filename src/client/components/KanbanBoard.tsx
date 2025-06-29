@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Board, Task } from '../knbn/types';
 
 interface KanbanBoardProps {
   board: Board;
+  boardPath?: string;
+  onTaskUpdate?: () => void;
 }
 
-const KanbanBoard: React.FC<KanbanBoardProps> = ({ board }) => {
+const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdate }) => {
   const { configuration, tasks } = board;
+  const [draggedTask, setDraggedTask] = useState<Task | null>(null);
+  const [draggedOver, setDraggedOver] = useState<string | null>(null);
 
   const getTasksForColumn = (columnName: string): Task[] => {
     return Object.values(tasks).filter(task => task.column === columnName);
@@ -16,11 +20,78 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board }) => {
     return new Date(dateString).toLocaleDateString();
   };
 
+  const handleDragStart = (e: React.DragEvent, task: Task) => {
+    setDraggedTask(task);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.currentTarget.outerHTML);
+    e.currentTarget.classList.add('dragging');
+  };
+
+  const handleDragEnd = (e: React.DragEvent) => {
+    e.currentTarget.classList.remove('dragging');
+    setDraggedTask(null);
+    setDraggedOver(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDragEnter = (e: React.DragEvent, columnName: string) => {
+    e.preventDefault();
+    setDraggedOver(columnName);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setDraggedOver(null);
+    }
+  };
+
+  const handleDrop = async (e: React.DragEvent, targetColumn: string) => {
+    e.preventDefault();
+    setDraggedOver(null);
+
+    if (!draggedTask || !boardPath || draggedTask.column === targetColumn) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/boards/${encodeURIComponent(boardPath)}/tasks/${draggedTask.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          column: targetColumn,
+        }),
+      });
+
+      if (response.ok) {
+        onTaskUpdate?.();
+      } else {
+        console.error('Failed to update task');
+      }
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+
+    setDraggedTask(null);
+  };
+
   return (
     <div className="kanban-board">
       <div className="board-columns">
         {configuration.columns.map(column => (
-          <div key={column.name} className="column">
+          <div 
+            key={column.name} 
+            className={`column ${draggedOver === column.name ? 'drag-over' : ''}`}
+            onDragOver={handleDragOver}
+            onDragEnter={(e) => handleDragEnter(e, column.name)}
+            onDragLeave={handleDragLeave}
+            onDrop={(e) => handleDrop(e, column.name)}
+          >
             <div className="column-header">
               <h3>{column.name}</h3>
               <span className="task-count">
@@ -28,9 +99,15 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board }) => {
               </span>
             </div>
             
-            <div className="column-tasks">
+            <div className={`column-tasks ${draggedOver === column.name ? 'drag-over' : ''}`}>
               {getTasksForColumn(column.name).map(task => (
-                <div key={task.id} className="task-card">
+                <div 
+                  key={task.id} 
+                  className="task-card"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, task)}
+                  onDragEnd={handleDragEnd}
+                >
                   <div className="task-header">
                     <h4 className="task-title">{task.title}</h4>
                     <span className="task-id">#{task.id}</span>

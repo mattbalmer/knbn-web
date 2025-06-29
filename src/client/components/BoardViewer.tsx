@@ -82,11 +82,31 @@ const BoardViewer: React.FC = () => {
       case 'sprint':
         return <SprintTab />;
       case 'all-tasks':
-        return <KanbanBoard board={boardContent} />;
+        return (
+          <KanbanBoard 
+            board={boardContent} 
+            boardPath={selectedBoard}
+            onTaskUpdate={() => {
+              if (selectedBoard) {
+                fetchBoardContent(selectedBoard);
+              }
+            }}
+          />
+        );
       case 'manage':
         return <ManageTab />;
       default:
-        return <KanbanBoard board={boardContent} />;
+        return (
+          <KanbanBoard 
+            board={boardContent} 
+            boardPath={selectedBoard}
+            onTaskUpdate={() => {
+              if (selectedBoard) {
+                fetchBoardContent(selectedBoard);
+              }
+            }}
+          />
+        );
     }
   };
 

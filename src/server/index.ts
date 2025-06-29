@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
-import { loadBoard, KNBN_CORE_VERSION, KNBN_BOARD_VERSION } from './knbn';
+import { loadBoard, updateTaskInBoard, saveBoard, KNBN_CORE_VERSION, KNBN_BOARD_VERSION } from './knbn';
 import { version as KNBN_WEB_VERSION } from '../../package.json';
 
 export function startServer(port: number = 9000): void {
@@ -49,6 +49,36 @@ export function startServer(port: number = 9000): void {
       res.json(board);
     } catch (error) {
       res.status(500).json({ error: 'Failed to load board content' });
+    }
+  });
+
+  // API endpoint to update a task in a board file
+  app.put('/api/boards/:boardPath(*)/tasks/:taskId', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      const taskId = parseInt(req.params.taskId);
+      const updates = req.body;
+
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+
+      if (isNaN(taskId)) {
+        return res.status(400).json({ error: 'Invalid task ID' });
+      }
+
+      const board = loadBoard(boardPath);
+      const updatedTask = updateTaskInBoard(board, taskId, updates);
+
+      if (!updatedTask) {
+        return res.status(404).json({ error: 'Task not found' });
+      }
+
+      saveBoard(boardPath, board);
+      res.json(updatedTask);
+    } catch (error) {
+      console.error('Failed to update task:', error);
+      res.status(500).json({ error: 'Failed to update task' });
     }
   });
 
