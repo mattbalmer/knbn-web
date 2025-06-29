@@ -1,1 +1,1 @@
-export * from 'knbn/src/core/types';
+export * from 'knbn/types';

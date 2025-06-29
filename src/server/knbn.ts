@@ -1,5 +1,4 @@
-// TODO: Figure out better import/export paths
-export * from 'knbn/src/core/boardUtils';
+export * from 'knbn/boardUtils';
 import { version, boardVersion } from 'knbn/package.json';
 
 export const KNBN_CORE_VERSION = version;

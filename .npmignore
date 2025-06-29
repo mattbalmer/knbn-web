@@ -1,11 +1,9 @@
 .claude/
 .idea/
-dist/
 node_modules/
 claude-test.knbn
 src/cli/
 src/client/
-dist/server/
 .knbn
 CLAUDE.md
 webpack.config.js
