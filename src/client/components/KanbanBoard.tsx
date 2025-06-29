@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Board, Task } from '../knbn/types';
+import NewTaskForm from './NewTaskForm';
 
 interface KanbanBoardProps {
   board: Board;
@@ -11,6 +12,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
   const { configuration, tasks } = board;
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   const [draggedOver, setDraggedOver] = useState<string | null>(null);
+  const [showNewTaskForm, setShowNewTaskForm] = useState(false);
 
   const getTasksForColumn = (columnName: string): Task[] => {
     return Object.values(tasks).filter(task => task.column === columnName);
@@ -80,8 +82,31 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
     setDraggedTask(null);
   };
 
+  const handleNewTaskClick = () => {
+    setShowNewTaskForm(true);
+  };
+
+  const handleTaskCreated = () => {
+    setShowNewTaskForm(false);
+    onTaskUpdate?.();
+  };
+
+  const handleCancelNewTask = () => {
+    setShowNewTaskForm(false);
+  };
+
   return (
     <div className="kanban-board">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <div></div>
+        <button 
+          className="new-task-button"
+          onClick={handleNewTaskClick}
+        >
+          + New Task
+        </button>
+      </div>
+
       <div className="board-columns">
         {configuration.columns.map(column => (
           <div 
@@ -146,6 +171,15 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
           </div>
         ))}
       </div>
+
+      {showNewTaskForm && boardPath && (
+        <NewTaskForm
+          board={board}
+          boardPath={boardPath}
+          onTaskCreated={handleTaskCreated}
+          onCancel={handleCancelNewTask}
+        />
+      )}
     </div>
   );
 };

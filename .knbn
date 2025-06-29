@@ -20,11 +20,27 @@ tasks:
     id: 2
     title: Some other thing
     description: ''
-    column: todo
+    column: done
     dates:
       created: '2025-06-29T18:56:24.822Z'
-      updated: '2025-06-29T23:32:29.998Z'
-      moved: '2025-06-29T23:32:29.998Z'
+      updated: '2025-06-29T23:59:51.136Z'
+      moved: '2025-06-29T23:59:51.136Z'
+  '3':
+    id: 3
+    title: Show Backlog in Backlog tab
+    description: ''
+    column: backlog
+    dates:
+      created: '2025-06-29T23:59:44.742Z'
+      updated: '2025-06-29T23:59:44.742Z'
+  '4':
+    id: 4
+    title: Show board in sprint tab
+    description: Show sprint dropdown, only show tasks that have that sprint on them.
+    column: backlog
+    dates:
+      created: '2025-06-30T00:00:20.068Z'
+      updated: '2025-06-30T00:00:20.068Z'
 sprints:
   - name: Alpha
     description: Initial alpha release with basic features
@@ -33,7 +49,7 @@ sprints:
       starts: '2025-06-01T00:00:00Z'
       ends: '2025-06-08T23:59:59Z'
 metadata:
-  nextId: 3
+  nextId: 5
   createdAt: '2025-06-29T00:00:00Z'
-  lastModified: '2025-06-29T23:32:29.998Z'
+  lastModified: '2025-06-30T00:00:20.068Z'
   version: '0.1'

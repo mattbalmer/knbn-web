@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
-import { loadBoard, updateTaskInBoard, saveBoard, KNBN_CORE_VERSION, KNBN_BOARD_VERSION } from './knbn';
+import { loadBoard, updateTaskInBoard, saveBoard, addTaskToBoard, KNBN_CORE_VERSION, KNBN_BOARD_VERSION } from './knbn';
 import { version as KNBN_WEB_VERSION } from '../../package.json';
 
 export function startServer(port: number = 9000): void {
@@ -79,6 +79,31 @@ export function startServer(port: number = 9000): void {
     } catch (error) {
       console.error('Failed to update task:', error);
       res.status(500).json({ error: 'Failed to update task' });
+    }
+  });
+
+  // API endpoint to create a new task in a board file
+  app.post('/api/boards/:boardPath(*)/tasks', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      const taskData = req.body;
+
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+
+      if (!taskData.title) {
+        return res.status(400).json({ error: 'Task title is required' });
+      }
+
+      const board = loadBoard(boardPath);
+      const newTask = addTaskToBoard(board, taskData);
+
+      saveBoard(boardPath, board);
+      res.status(201).json(newTask);
+    } catch (error) {
+      console.error('Failed to create task:', error);
+      res.status(500).json({ error: 'Failed to create task' });
     }
   });
 

@@ -2710,10 +2710,10 @@ kind-of@^6.0.2:
   resolved "https://registry.npmjs.org/kind-of/-/kind-of-6.0.3.tgz"
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
 
-knbn@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/knbn/-/knbn-0.1.2.tgz#657e0211e437116d2df49dc5eaa2f0a4442a40f1"
-  integrity sha512-7a4IzNpGugKjuSnIsQq6p2WJkBpfl4W1QK1NB6vccFU/RyajFQQJsAIxwIf86CUuzJ4xHxyEc5aqFE3VZytmJQ==
+knbn@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/knbn/-/knbn-0.1.3.tgz#98a49f7d320fa3807fea7c0d0a9b94e03f5abfad"
+  integrity sha512-M3YVLA212UnUcCrKC5SErZIqWT1MPYv9go0Gvhbme+T2V0GBZ2Ig9q5TSNI0Hm/cGXYS27o1AlOSad0LYajrOA==
   dependencies:
     js-yaml "^4.1.0"
 
