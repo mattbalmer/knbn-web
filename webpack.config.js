@@ -1,5 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
   console.log(`Building client bundle in ${argv.mode} mode:`);
@@ -33,6 +34,14 @@ module.exports = (env, argv) => {
     plugins: [
       new MiniCssExtractPlugin({
         filename: 'styles.css',
+      }),
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: 'vendor/*.js',
+            to: '[name][ext]',
+          },
+        ],
       }),
     ],
     externals: {
