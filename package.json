@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "boardVersion": "0.1.0",
   "description": "A web viewer for the KnBn CLI tool",
+  "author": "Matthew Balmer <contact@mattbalmer.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mattbalmer/knbn-web"
+  },
   "main": "dist/cli/index.js",
   "bin": {
     "knbn-web": "dist/cli/index.js"
@@ -20,7 +25,6 @@
     "web",
     "typescript"
   ],
-  "author": "",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",

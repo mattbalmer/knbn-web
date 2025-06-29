@@ -1,0 +1,33 @@
+# KnBn Web
+
+A web-based viewer for the KnBn CLI tool - providing a simple local interface to visualize and manage `.knbn` kanban board files.
+
+_This is an early, work-in-progress version of the project. Use accepting risk of breaking changes._
+
+## Installation
+
+Install KnBn Web globally via npm:
+
+```bash
+npm i -g knbn-web
+```
+
+Then run:
+
+```bash
+knbn-web init
+```
+
+## Usage
+
+Navigate to a directory containing `.knbn` files and start the web server:
+
+```bash
+knbn-web
+```
+
+The application will start on `http://localhost:9000` by default. You can specify a custom port:
+
+```bash
+knbn-web -p 8080
+```
