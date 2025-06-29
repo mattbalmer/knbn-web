@@ -15,15 +15,22 @@ interface BoardFile {
   path: string;
 }
 
+interface VersionInfo {
+  knbnWeb: string;
+  knbn: string;
+}
+
 const BoardViewer: React.FC = () => {
   const [boardFiles, setBoardFiles] = useState<BoardFile[]>([]);
   const [selectedBoard, setSelectedBoard] = useState<string>('');
   const [boardContent, setBoardContent] = useState<Board | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
+  const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
 
   useEffect(() => {
     fetchBoardFiles();
+    fetchVersionInfo();
   }, []);
 
   const fetchBoardFiles = async () => {
@@ -34,6 +41,17 @@ const BoardViewer: React.FC = () => {
       setBoardFiles(files);
     } catch (err) {
       setError('Failed to load board files');
+    }
+  };
+
+  const fetchVersionInfo = async () => {
+    try {
+      const response = await fetch('/api/version');
+      if (!response.ok) throw new Error('Failed to fetch version info');
+      const version = await response.json();
+      setVersionInfo(version);
+    } catch (err) {
+      console.error('Failed to load version info:', err);
     }
   };
 
@@ -59,7 +77,20 @@ const BoardViewer: React.FC = () => {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>KnBn Board Viewer</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h1>KnBn Board Viewer</h1>
+        {versionInfo && (
+          <div style={{ 
+            fontSize: '12px', 
+            color: '#666',
+            textAlign: 'right',
+            lineHeight: '1.4'
+          }}>
+            <div>KnBn Web v{versionInfo.knbnWeb}</div>
+            <div>KnBn v{versionInfo.knbn}</div>
+          </div>
+        )}
+      </div>
       
       <div style={{ marginBottom: '20px' }}>
         <h2>Select Board File</h2>

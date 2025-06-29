@@ -1,7 +1,11 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
-import { loadBoard } from 'knbn/src/core/boardUtils'; // TODO: Figure out better import/export paths
+import { loadBoard } from './knbn';
+
+// Load version info
+const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '../../package.json'), 'utf8'));
+const knbnPackageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '../../node_modules/knbn/package.json'), 'utf8'));
 
 export function startServer(port: number = 9000): void {
   const app = express();
@@ -10,6 +14,14 @@ export function startServer(port: number = 9000): void {
   
   // Serve static files from dist/client
   app.use('/static', express.static(path.join(__dirname, '../../dist/client')));
+
+  // API endpoint to get version information
+  app.get('/api/version', (req, res) => {
+    res.json({
+      knbnWeb: packageJson.version,
+      knbn: knbnPackageJson.version
+    });
+  });
 
   // API endpoint to list all .knbn files in current directory
   app.get('/api/boards', (req, res) => {
