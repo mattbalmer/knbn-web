@@ -11,8 +11,7 @@
     "build": "tsc && npm run build:client",
     "build:client": "webpack --mode production",
     "build:dev": "webpack --mode development",
-    "start": "node dist/cli/index.js",
-    "dev": "ts-node src/cli/index.ts"
+    "start": "ts-node src/cli/index.ts"
   },
   "keywords": [
     "knbn",

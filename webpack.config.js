@@ -5,7 +5,7 @@ module.exports = (env, argv) => {
   const isDev = argv.mode ? argv.mode === 'development' || argv.mode === 'dev' : true;
 
   return {
-    entry: './src/server/client/index.tsx',
+    entry: './src/client/index.tsx',
     output: {
       path: path.resolve(__dirname, 'dist/client'),
       filename: 'bundle.js',
