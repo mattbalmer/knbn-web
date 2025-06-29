@@ -145,6 +145,13 @@ const BoardViewer: React.FC = () => {
 
       {boardContent && !loading && (
         <div>
+          <div className="board-header">
+            <h2>{boardContent.configuration.name}</h2>
+            {boardContent.configuration.description && (
+              <p className="board-description">{boardContent.configuration.description}</p>
+            )}
+          </div>
+
           <TabNavigation 
             activeTab={activeTab} 
             onTabChange={setActiveTab} 

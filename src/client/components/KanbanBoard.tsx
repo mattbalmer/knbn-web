@@ -18,13 +18,6 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board }) => {
 
   return (
     <div className="kanban-board">
-      <div className="board-header">
-        <h2>{configuration.name}</h2>
-        {configuration.description && (
-          <p className="board-description">{configuration.description}</p>
-        )}
-      </div>
-      
       <div className="board-columns">
         {configuration.columns.map(column => (
           <div key={column.name} className="column">
