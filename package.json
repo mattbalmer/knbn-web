@@ -3,16 +3,16 @@
   "version": "0.1.0",
   "boardVersion": "0.1.0",
   "description": "A web viewer for the KnBn CLI tool",
-  "main": "dist/server/run.js",
+  "main": "dist/cli/index.js",
   "bin": {
-    "knbn": "dist/server/run.js"
+    "knbn-web": "dist/cli/index.js"
   },
   "scripts": {
     "build": "tsc && npm run build:client",
     "build:client": "webpack --mode production",
     "build:dev": "webpack --mode development",
-    "start": "node dist/server/run.js",
-    "dev": "ts-node src/server/run.ts"
+    "start": "node dist/cli/index.js",
+    "dev": "ts-node src/cli/index.ts"
   },
   "keywords": [
     "knbn",

@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
-import { findBoardFile, loadBoard } from 'knbn/boardUtils';
+import { loadBoard } from 'knbn/src/core/boardUtils'; // TODO: Figure out better import/export paths
 
 export function startServer(port: number = 9000): void {
   const app = express();
@@ -9,7 +9,7 @@ export function startServer(port: number = 9000): void {
   app.use(express.json());
   
   // Serve static files from dist/client
-  app.use('/static', express.static(path.join(__dirname, '../client')));
+  app.use('/static', express.static(path.join(__dirname, '../../dist/client')));
 
   // API endpoint to list all .knbn files in current directory
   app.get('/api/boards', (req, res) => {
