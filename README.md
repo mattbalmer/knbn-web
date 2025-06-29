@@ -12,12 +12,6 @@ Install KnBn Web globally via npm:
 npm i -g knbn-web
 ```
 
-Then run:
-
-```bash
-knbn-web init
-```
-
 ## Usage
 
 Navigate to a directory containing `.knbn` files and start the web server:
