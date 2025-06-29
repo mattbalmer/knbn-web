@@ -9,7 +9,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board }) => {
   const { configuration, tasks } = board;
 
   const getTasksForColumn = (columnName: string): Task[] => {
-    return Object.values(tasks).filter(task => task.status === columnName);
+    return Object.values(tasks).filter(task => task.column === columnName);
   };
 
   const formatDate = (dateString: string): string => {

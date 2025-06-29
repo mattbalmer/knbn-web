@@ -16,18 +16,21 @@ configuration:
     - name: "testing"
     - name: "critical"
     - name: "enhancement"
-  sprintInfo:
-    number: 23
-    startDate: "2024-01-22T00:00:00Z"
-    endDate: "2024-02-05T23:59:59Z"
+
+sprints:
+  - name: 23
+    description: Initial alpha release with basic features
     capacity: 40
-    commitment: 35
+    dates:
+      created: "2024-01-22T00:00:00Z"
+      starts: "2024-01-22T00:00:00Z"
+      ends: "2024-02-05T23:59:59Z"
 
 tasks:
   101:
     title: "User dashboard redesign"
     description: "Redesign the main user dashboard with new layout and improved UX"
-    status: "doing"
+    column: "doing"
     labels: ["frontend", "enhancement"]
     assignee: "sarah"
     storyPoints: 8
@@ -36,7 +39,7 @@ tasks:
   102:
     title: "Database migration script"
     description: "Create migration script to update user table schema"
-    status: "done"
+    column: "done"
     labels: ["database", "critical"]
     assignee: "alex"
     storyPoints: 5
@@ -46,7 +49,7 @@ tasks:
   103:
     title: "API rate limiting"
     description: "Implement rate limiting for all public API endpoints"
-    status: "testing"
+    column: "testing"
     labels: ["backend", "critical"]
     assignee: "mike"
     storyPoints: 3
@@ -55,7 +58,7 @@ tasks:
   104:
     title: "Mobile app crash fix"
     description: "Fix crash when opening profile page on Android devices"
-    status: "todo"
+    column: "todo"
     labels: ["frontend", "critical"]
     assignee: "sarah"
     storyPoints: 2
@@ -64,7 +67,7 @@ tasks:
   105:
     title: "Performance monitoring setup"
     description: "Set up APM monitoring for production environment"
-    status: "backlog"
+    column: "backlog"
     labels: ["backend", "enhancement"]
     assignee: null
     storyPoints: 5
@@ -73,7 +76,7 @@ tasks:
   106:
     title: "Unit test coverage improvement"
     description: "Increase unit test coverage to 85% for core modules"
-    status: "todo"
+    column: "todo"
     labels: ["testing", "enhancement"]
     assignee: "alex"
     storyPoints: 8
@@ -82,7 +85,7 @@ tasks:
   107:
     title: "User notification system"
     description: "Implement in-app and email notifications for user actions"
-    status: "doing"
+    column: "doing"
     labels: ["backend", "frontend"]
     assignee: "mike"
     storyPoints: 13

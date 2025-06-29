@@ -6,21 +6,26 @@ configuration:
     - name: todo
     - name: working
     - name: done
-  milestones:
-    - name: Alpha
-      startDate: '2025-06-01T00:00:00Z'
-      endDate: null
-      description: Initial alpha release with basic features
+
+sprints:
+  - name: Alpha
+    description: Initial alpha release with basic features
+    dates:
+      created: '2025-06-01T00:00:00Z'
+      starts: '2025-06-01T00:00:00Z'
+      ends: "2025-06-08T23:59:59Z"
+
 tasks:
   '1':
     id: 1
     title: Remove CWD print
     description: ''
-    status: done
+    column: done
     dates:
       created: '2025-06-29T18:56:24.822Z'
       updated: '2025-06-29T18:59:00.000Z'
       moved: '2025-06-29T18:59:00.000Z'
+
 metadata:
   nextId: 2
   createdAt: '2025-06-29T00:00:00Z'

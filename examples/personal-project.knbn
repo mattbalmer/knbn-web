@@ -11,7 +11,7 @@ tasks:
   1:
     title: "Set up project structure"
     description: "Initialize the basic project structure with folders and config files"
-    status: "done"
+    column: "done"
     labels: ["feature"]
     assignee: "matt"
     created: "2024-01-15T10:00:00Z"
@@ -20,7 +20,7 @@ tasks:
   2:
     title: "Implement user authentication"
     description: "Add login/logout functionality with JWT tokens"
-    status: "in-progress"
+    column: "in-progress"
     labels: ["feature", "urgent"]
     assignee: "matt"
     created: "2024-01-16T09:00:00Z"
@@ -28,7 +28,7 @@ tasks:
   3:
     title: "Fix database connection timeout"
     description: "Database connections are timing out after 30 seconds of inactivity"
-    status: "todo"
+    column: "todo"
     labels: ["bug", "urgent"]
     assignee: null
     created: "2024-01-17T16:45:00Z"
@@ -36,7 +36,7 @@ tasks:
   4:
     title: "Write API documentation"
     description: "Document all REST endpoints with examples and response schemas"
-    status: "todo"
+    column: "todo"
     labels: ["documentation"]
     assignee: null
     created: "2024-01-18T08:30:00Z"
@@ -44,7 +44,7 @@ tasks:
   5:
     title: "Implement password reset flow"
     description: "Users should be able to reset their password via email"
-    status: "review"
+    column: "review"
     labels: ["feature"]
     assignee: "matt"
     created: "2024-01-12T14:20:00Z"
