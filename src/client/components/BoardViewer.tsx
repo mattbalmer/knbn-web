@@ -5,7 +5,10 @@ import BacklogTab from './BacklogTab';
 import SprintTab from './SprintTab';
 import ManageTab from './ManageTab';
 import VersionTooltip from './VersionTooltip';
+import NewBoardForm from './NewBoardForm';
+import Spinner from './Spinner';
 import { Board } from '../knbn/types';
+import FirstBoardForm from './FirstBoardForm';
 
 interface BoardFile {
   name: string;
@@ -23,9 +26,11 @@ const BoardViewer: React.FC = () => {
   const [selectedBoard, setSelectedBoard] = useState<string>('');
   const [boardContent, setBoardContent] = useState<Board | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingBoards, setLoadingBoards] = useState(true);
   const [error, setError] = useState<string>('');
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>('all-tasks');
+  const [showNewBoardForm, setShowNewBoardForm] = useState(false);
 
   useEffect(() => {
     fetchBoardFiles();
@@ -33,6 +38,7 @@ const BoardViewer: React.FC = () => {
   }, []);
 
   const fetchBoardFiles = async () => {
+    setLoadingBoards(true);
     try {
       const response = await fetch('/api/boards');
       if (!response.ok) throw new Error('Failed to fetch board files');
@@ -43,6 +49,8 @@ const BoardViewer: React.FC = () => {
       }
     } catch (err) {
       setError('Failed to load board files');
+    } finally {
+      setLoadingBoards(false);
     }
   };
 
@@ -75,6 +83,19 @@ const BoardViewer: React.FC = () => {
   const handleBoardSelect = (boardPath: string) => {
     setSelectedBoard(boardPath);
     fetchBoardContent(boardPath);
+  };
+
+  const handleCreateBoard = () => {
+    setShowNewBoardForm(true);
+  };
+
+  const handleBoardCreated = () => {
+    setShowNewBoardForm(false);
+    fetchBoardFiles();
+  };
+
+  const handleCancelNewBoard = () => {
+    setShowNewBoardForm(false);
   };
 
   const renderTabContent = () => {
@@ -124,6 +145,8 @@ const BoardViewer: React.FC = () => {
     }
   };
 
+  const hasNoBoards = !loadingBoards && boardFiles.length === 0;
+
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <header className="app-header">
@@ -134,7 +157,11 @@ const BoardViewer: React.FC = () => {
         <div className="header-center">
           <div className="board-selector">
             <span className="board-selector-label">Board:</span>
-            {boardFiles.length === 0 ? (
+            {loadingBoards ? (
+              <select disabled>
+                <option>Loading boards...</option>
+              </select>
+            ) : boardFiles.length === 0 ? (
               <select disabled>
                 <option>No .knbn files found</option>
               </select>
@@ -151,6 +178,13 @@ const BoardViewer: React.FC = () => {
                 ))}
               </select>
             )}
+            <button 
+              className="create-board-button"
+              onClick={handleCreateBoard}
+              disabled={loadingBoards || hasNoBoards}
+            >
+              + New Board
+            </button>
           </div>
         </div>
         
@@ -172,9 +206,9 @@ const BoardViewer: React.FC = () => {
         </div>
       )}
 
-      {loading && <p>Loading board content...</p>}
+      {!boardContent && loading && <Spinner />}
 
-      {boardContent && !loading && (
+      {boardContent && (
         <div>
           <div className="board-header">
             <h2>{boardContent.configuration.name}</h2>
@@ -192,6 +226,17 @@ const BoardViewer: React.FC = () => {
           </div>
         </div>
       )}
+
+      {
+        hasNoBoards ?
+          <FirstBoardForm onBoardCreated={handleBoardCreated} />
+          : showNewBoardForm
+            ? <NewBoardForm
+              onBoardCreated={handleBoardCreated}
+              onCancel={handleCancelNewBoard}
+            />
+          : null
+      }
     </div>
   );
 };

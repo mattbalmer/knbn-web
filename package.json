@@ -1,6 +1,6 @@
 {
   "name": "knbn-web",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A web viewer for the KnBn CLI tool",
   "author": "Matthew Balmer <contact@mattbalmer.com>",
   "repository": {
@@ -28,7 +28,7 @@
   "dependencies": {
     "express": "^4.18.2",
     "js-yaml": "^4.1.0",
-    "knbn": "^0.1.3",
+    "knbn": "^0.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

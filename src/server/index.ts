@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
-import { loadBoard, updateTaskInBoard, saveBoard, addTaskToBoard, KNBN_CORE_VERSION, KNBN_BOARD_VERSION } from './knbn';
+import { loadBoard, updateTaskInBoard, saveBoard, addTaskToBoard, createBoard, KNBN_CORE_VERSION, KNBN_BOARD_VERSION } from './knbn';
 import { version as KNBN_WEB_VERSION } from '../../package.json';
 
 export function startServer(port: number = 9000): void {
@@ -104,6 +104,37 @@ export function startServer(port: number = 9000): void {
     } catch (error) {
       console.error('Failed to create task:', error);
       res.status(500).json({ error: 'Failed to create task' });
+    }
+  });
+
+  // API endpoint to create a new board file
+  app.post('/api/boards', (req, res) => {
+    try {
+      const { name, description } = req.body;
+
+      // Create the board using knbn core function
+      const filePath = createBoard(name);
+      
+      // If description is provided, update the board description
+      if (description) {
+        const board = loadBoard(filePath);
+        board.configuration.description = description;
+        saveBoard(filePath, board);
+      }
+
+      // Return the board info
+      const fileName = path.basename(filePath);
+      res.status(201).json({
+        name: fileName,
+        path: filePath
+      });
+    } catch (error) {
+      console.error('Failed to create board:', error);
+      if (error instanceof Error && error.message.includes('already exists')) {
+        res.status(409).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Failed to create board' });
+      }
     }
   });
 

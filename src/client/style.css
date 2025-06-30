@@ -410,6 +410,13 @@
   overflow-y: auto;
 }
 
+.first-board-form {
+  background: white;
+  max-width: 500px;
+  margin: 24px auto;
+}
+
+.first-board-form h3,
 .new-task-form h3 {
   margin: 0 0 20px 0;
   color: #333;
@@ -579,6 +586,116 @@
   color: #666;
   font-size: 1em;
   font-style: italic;
+}
+
+/* New Board Form Styles */
+.auto-show-message {
+  background: #e3f2fd;
+  color: #1565c0;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  border-left: 4px solid #2196f3;
+}
+
+.form-help {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.form-error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  border: 1px solid #f5c6cb;
+}
+
+.create-board-button {
+  background: #17a2b8;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.create-board-button:hover {
+  background: #138496;
+  transform: translateY(-1px);
+}
+
+.create-board-button:active {
+  transform: translateY(0);
+}
+
+.create-board-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.create-board-button:disabled:hover {
+  background: #17a2b8;
+  transform: none;
+}
+
+/* Spinner Styles */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  opacity: 0;
+  animation: fadeInSpinner 0.3s ease-in-out 0.5s forwards;
+}
+
+.spinner-container.fade-out {
+  animation: fadeOutSpinner 0.3s ease-in-out forwards;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeInSpinner {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOutSpinner {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 /* Responsive design */
