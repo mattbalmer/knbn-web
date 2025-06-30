@@ -6,10 +6,13 @@ _This is an early, work-in-progress version of the project. Use accepting risk o
 
 ## Installation
 
-Install KnBn Web globally via npm:
+Install KnBn Web globally via npm, or use npx:
 
 ```bash
+npx knbn-web
+# or
 npm i -g knbn-web
+knbn-web 
 ```
 
 ## Usage
