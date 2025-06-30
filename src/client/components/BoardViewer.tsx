@@ -84,7 +84,17 @@ const BoardViewer: React.FC = () => {
       case 'backlog':
         return <BacklogTab />;
       case 'sprint':
-        return <SprintTab />;
+        return (
+          <SprintTab
+            board={boardContent}
+            boardPath={selectedBoard}
+            onTaskUpdate={() => {
+              if (selectedBoard) {
+                fetchBoardContent(selectedBoard);
+              }
+            }}
+          />
+        );
       case 'all-tasks':
         return (
           <KanbanBoard 

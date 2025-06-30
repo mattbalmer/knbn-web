@@ -37,10 +37,19 @@ tasks:
     id: 4
     title: Show board in sprint tab
     description: Show sprint dropdown, only show tasks that have that sprint on them.
-    column: backlog
+    column: done
     dates:
       created: '2025-06-30T00:00:20.068Z'
-      updated: '2025-06-30T00:00:20.068Z'
+      updated: '2025-06-30T00:12:03.081Z'
+      moved: '2025-06-30T00:12:03.081Z'
+  '5':
+    id: 5
+    title: Edit task dialog
+    description: ''
+    column: backlog
+    dates:
+      created: '2025-06-30T00:12:38.013Z'
+      updated: '2025-06-30T00:12:38.013Z'
 sprints:
   - name: Alpha
     description: Initial alpha release with basic features
@@ -49,7 +58,7 @@ sprints:
       starts: '2025-06-01T00:00:00Z'
       ends: '2025-06-08T23:59:59Z'
 metadata:
-  nextId: 5
+  nextId: 6
   createdAt: '2025-06-29T00:00:00Z'
-  lastModified: '2025-06-30T00:00:20.068Z'
+  lastModified: '2025-06-30T00:12:38.013Z'
   version: '0.1'

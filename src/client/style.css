@@ -519,6 +519,68 @@
   transform: translateY(0);
 }
 
+/* Sprint Tab Styles */
+.sprint-tab {
+  width: 100%;
+}
+
+.sprint-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.sprint-selector label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+  white-space: nowrap;
+}
+
+.sprint-selector select {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background: white;
+  color: #495057;
+  min-width: 200px;
+  cursor: pointer;
+}
+
+.sprint-selector select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.sprint-content {
+  width: 100%;
+}
+
+.sprint-info {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.sprint-info h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 1.5em;
+}
+
+.sprint-description {
+  margin: 0;
+  color: #666;
+  font-size: 1em;
+  font-style: italic;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .board-columns {
