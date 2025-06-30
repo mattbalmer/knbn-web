@@ -1,6 +1,6 @@
 {
   "name": "knbn-web",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A web viewer for the KnBn CLI tool",
   "author": "Matthew Balmer <contact@mattbalmer.com>",
   "repository": {

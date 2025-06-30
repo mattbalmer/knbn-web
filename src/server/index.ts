@@ -1,10 +1,21 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
+import { exec } from 'child_process';
 import { loadBoard, updateTaskInBoard, saveBoard, addTaskToBoard, createBoard, KNBN_CORE_VERSION, KNBN_BOARD_VERSION } from './knbn';
 import { version as KNBN_WEB_VERSION } from '../../package.json';
 
-export function startServer(port: number = 9000): void {
+function openBrowser(url: string): void {
+  const start = (process.platform === 'darwin' ? 'open' : 
+                process.platform === 'win32' ? 'start' : 'xdg-open');
+  exec(`${start} ${url}`, (error) => {
+    if (error) {
+      console.log(`Note: Could not automatically open browser. Please visit ${url} manually.`);
+    }
+  });
+}
+
+export function startServer(port: number = 9000, shouldOpenBrowser: boolean = true): void {
   const app = express();
 
   app.use(express.json());
@@ -161,9 +172,14 @@ export function startServer(port: number = 9000): void {
   });
 
   app.listen(port, () => {
-    console.log(`KnBn server running at http://localhost:${port}`);
+    const url = `http://localhost:${port}`;
+    console.log(`KnBn server running at ${url}`);
     console.log(` - Core Version: ${KNBN_CORE_VERSION}`);
     console.log(` - Board Version: ${KNBN_BOARD_VERSION}`);
     console.log(` - Web Version: ${KNBN_WEB_VERSION}`);
+    
+    if (shouldOpenBrowser) {
+      setTimeout(() => openBrowser(url), 1000); // Small delay to ensure server is ready
+    }
   });
 }

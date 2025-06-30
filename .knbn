@@ -50,6 +50,15 @@ tasks:
     dates:
       created: '2025-06-30T00:12:38.013Z'
       updated: '2025-06-30T00:12:38.013Z'
+  '6':
+    id: 6
+    title: Automatically open a browser to the URL on server start
+    description: Include an optional flag to prevent opening the browser.
+    column: done
+    dates:
+      created: '2025-06-30T02:08:57.569Z'
+      updated: '2025-06-30T02:11:41.722Z'
+      moved: '2025-06-30T02:11:41.722Z'
 sprints:
   - name: Alpha
     description: Initial alpha release with basic features
@@ -58,7 +67,7 @@ sprints:
       starts: '2025-06-01T00:00:00Z'
       ends: '2025-06-08T23:59:59Z'
 metadata:
-  nextId: 6
+  nextId: 7
   createdAt: '2025-06-29T00:00:00Z'
-  lastModified: '2025-06-30T00:12:38.013Z'
+  lastModified: '2025-06-30T02:11:41.722Z'
   version: '0.1'

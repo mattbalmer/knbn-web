@@ -20,7 +20,15 @@ knbn-web
 Navigate to a directory containing `.knbn` files and start the web server:
 
 ```bash
+npx knbn-web
+# or
 knbn-web
+```
+
+You can suppress the browser auto-launch with the `--no-open` option:
+
+```bash
+npx knbn-web --no-open
 ```
 
 The application will start on `http://localhost:9000` by default. You can specify a custom port:
