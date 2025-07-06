@@ -48,8 +48,32 @@ const Header: React.FC<HeaderProps> = ({
 
   const hasNoBoards = !loadingBoards && boardFiles.length === 0;
 
+  // Query string management functions
+  const getDirectoryFromUrl = (): string => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('dir') || '';
+  };
+
+  const updateUrlWithDirectory = (path: string) => {
+    const url = new URL(window.location.href);
+    if (path) {
+      url.searchParams.set('dir', path);
+    } else {
+      url.searchParams.delete('dir');
+    }
+    window.history.replaceState({}, '', url.toString());
+  };
+
   useEffect(() => {
     fetchCwd();
+    
+    // Initialize directory path from URL
+    const initialDir = getDirectoryFromUrl();
+    if (initialDir) {
+      setDirectoryPath(initialDir);
+      setDirectoryPathInput(initialDir);
+      onDirectoryChange(initialDir);
+    }
   }, []);
 
   useEffect(() => {
@@ -113,6 +137,7 @@ const Header: React.FC<HeaderProps> = ({
     const newPath = [...parentPath, directory].join('/') + '/';
     setDirectoryPathInput(newPath);
     setDirectoryPath(newPath);
+    updateUrlWithDirectory(newPath);
     onDirectoryChange(newPath);
     setShowTypeahead(false);
     
@@ -193,6 +218,7 @@ const Header: React.FC<HeaderProps> = ({
     const isValid = path === '' || await validateDirectory(path);
     if (isValid) {
       setDirectoryPath(path);
+      updateUrlWithDirectory(path);
       onDirectoryChange(path);
     }
   };
