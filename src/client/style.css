@@ -340,8 +340,10 @@
 .header-center {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  justify-content: center;
 }
 
 .header-right {
@@ -372,7 +374,7 @@
 
 .path-input-wrapper {
   position: relative;
-  flex: 1;
+  flex: 0 1 auto;
 }
 
 .path-input-container {
@@ -381,8 +383,9 @@
   border: 1px solid #ced4da;
   border-radius: 4px;
   background: white;
-  min-width: 400px;
-  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+  flex: 0 1 auto;
   overflow: hidden;
 }
 
