@@ -29,11 +29,11 @@ tasks:
     id: 3
     title: Show Backlog in Backlog tab
     description: ''
-    column: todo
+    column: done
     dates:
       created: '2025-06-29T23:59:44.742Z'
-      updated: '2025-07-05T02:14:12.365Z'
-      moved: '2025-07-05T02:14:12.365Z'
+      updated: '2025-07-06T03:03:47.561Z'
+      moved: '2025-07-06T03:03:47.561Z'
   '4':
     id: 4
     title: Show board in sprint tab
@@ -59,6 +59,14 @@ tasks:
       created: '2025-06-30T02:08:57.569Z'
       updated: '2025-06-30T02:11:41.722Z'
       moved: '2025-06-30T02:11:41.722Z'
+  '7':
+    id: 7
+    title: Show all boards in cwd recursively
+    description: Optional dir dropdown too
+    column: todo
+    dates:
+      created: '2025-07-06T03:04:23.253Z'
+      updated: '2025-07-06T03:04:23.253Z'
 sprints:
   - name: Alpha
     description: Initial alpha release with basic features
@@ -68,8 +76,8 @@ sprints:
       ends: '2025-06-08T23:59:59Z'
 dates:
   created: '2025-06-29T00:00:00Z'
-  updated: '2025-07-05T02:14:12.365Z'
-  saved: '2025-07-05T02:14:12.365Z'
+  updated: '2025-07-06T03:04:23.253Z'
+  saved: '2025-07-06T03:04:23.253Z'
 metadata:
-  nextId: 7
+  nextId: 8
   version: '0.2'
