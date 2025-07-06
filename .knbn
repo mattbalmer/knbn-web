@@ -67,6 +67,24 @@ tasks:
     dates:
       created: '2025-07-06T03:04:23.253Z'
       updated: '2025-07-06T03:04:23.253Z'
+  '8':
+    id: 8
+    title: Allow backlog in create task dialog
+    description: ''
+    column: Backlog
+    dates:
+      created: '2025-07-06T03:04:47.269Z'
+      updated: '2025-07-06T03:04:50.164Z'
+      moved: '2025-07-06T03:04:50.164Z'
+  '9':
+    id: 9
+    title: Default vals from view
+    description: Presumably, it doesnt default column, sprint based on the current tab. Let's add that.
+    column: Backlog
+    dates:
+      created: '2025-07-06T03:05:21.919Z'
+      updated: '2025-07-06T03:05:23.878Z'
+      moved: '2025-07-06T03:05:23.878Z'
 sprints:
   - name: Alpha
     description: Initial alpha release with basic features
@@ -76,8 +94,8 @@ sprints:
       ends: '2025-06-08T23:59:59Z'
 dates:
   created: '2025-06-29T00:00:00Z'
-  updated: '2025-07-06T03:04:23.253Z'
-  saved: '2025-07-06T03:04:23.253Z'
+  updated: '2025-07-06T03:05:23.878Z'
+  saved: '2025-07-06T03:05:23.878Z'
 metadata:
-  nextId: 8
+  nextId: 10
   version: '0.2'
