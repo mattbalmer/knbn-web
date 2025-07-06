@@ -5,16 +5,20 @@ import NewTaskForm from './NewTaskForm';
 interface KanbanBoardProps {
   board: Board;
   boardPath?: string;
+  showBacklog?: boolean;
   onTaskUpdate?: () => void;
 }
 
-const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdate }) => {
-  const { configuration, tasks } = board;
+const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdate, showBacklog }) => {
+  const { tasks } = board;
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   const [draggedOver, setDraggedOver] = useState<string | null>(null);
   const [showNewTaskForm, setShowNewTaskForm] = useState(false);
 
   const getTasksForColumn = (columnName: string): Task[] => {
+    if (columnName === 'Backlog') {
+      return Object.values(tasks).filter(task => !task.column || task.column.toLowerCase() === 'backlog');
+    }
     return Object.values(tasks).filter(task => task.column === columnName);
   };
 
@@ -95,6 +99,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
     setShowNewTaskForm(false);
   };
 
+  const columns = showBacklog ? [{ name: 'Backlog' }, ...(board.columns || [])] : (board.columns || []);
+
   return (
     <div className="kanban-board">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
@@ -108,7 +114,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
       </div>
 
       <div className="board-columns">
-        {configuration.columns.map(column => (
+        {columns.map(column => (
           <div 
             key={column.name} 
             className={`column ${draggedOver === column.name ? 'drag-over' : ''}`}
@@ -159,11 +165,6 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
                       )}
                     </div>
                     
-                    {task.assignee && (
-                      <div className="task-assignee">
-                        Assigned to: {task.assignee}
-                      </div>
-                    )}
                   </div>
                 </div>
               ))}

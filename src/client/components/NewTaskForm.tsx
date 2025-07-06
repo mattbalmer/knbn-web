@@ -11,8 +11,7 @@ interface NewTaskFormProps {
 const NewTaskForm: React.FC<NewTaskFormProps> = ({ board, boardPath, onTaskCreated, onCancel }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [column, setColumn] = useState(board.configuration.columns[0]?.name || '');
-  const [assignee, setAssignee] = useState('');
+  const [column, setColumn] = useState(board.columns[0]?.name || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,7 +33,6 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({ board, boardPath, onTaskCreat
           title: title.trim(),
           description: description.trim(),
           column,
-          assignee: assignee.trim() || undefined,
         }),
       });
 
@@ -42,7 +40,6 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({ board, boardPath, onTaskCreat
         onTaskCreated();
         setTitle('');
         setDescription('');
-        setAssignee('');
       } else {
         console.error('Failed to create task');
       }
@@ -90,7 +87,7 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({ board, boardPath, onTaskCreat
               value={column}
               onChange={(e) => setColumn(e.target.value)}
             >
-              {board.configuration.columns.map((col) => (
+              {board.columns.map((col) => (
                 <option key={col.name} value={col.name}>
                   {col.name}
                 </option>
@@ -98,16 +95,6 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({ board, boardPath, onTaskCreat
             </select>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="assignee">Assignee</label>
-            <input
-              id="assignee"
-              type="text"
-              value={assignee}
-              onChange={(e) => setAssignee(e.target.value)}
-              placeholder="Enter assignee (optional)"
-            />
-          </div>
 
           <div className="form-actions">
             <button

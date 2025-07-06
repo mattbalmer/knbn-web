@@ -35,8 +35,7 @@ npm start -- -p 8080
 
 ## Key Dependencies
 
-- **knbn package**: Locally linked dependency at `/Users/matt/Workspace/knbn`
-  - Uses `loadBoard` from `knbn/src/core/boardUtils` 
+- **knbn package**:
   - Import path needs improvement (see TODO in server/index.ts)
 - **Webpack alias**: In dev mode, `knbn` resolves to `./node_modules/knbn`
 
@@ -94,3 +93,4 @@ metadata:
   ```
 - Use `claude-test.knbn` by default when testing. This is okay to modify without asking permission.
 - Never modify the file `.knbn` in this directory directly or without being prompted to. When prompter asks to modify ".knbn", use the CLI (npx knbn)
+- Use knbn MCP server for todo management

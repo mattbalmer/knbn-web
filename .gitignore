@@ -3,3 +3,4 @@
 dist/
 node_modules/
 claude-test.knbn
+.yarn/

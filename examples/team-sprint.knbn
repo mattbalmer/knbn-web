@@ -1,21 +1,21 @@
 # This file includes features that are not yet implemented, such as sprintInfo, historical data, and calculated fields.
 
-configuration:
-  name: "Team Sprint Board"
-  description: "Sprint 23 - Q1 2024 deliverables"
-  columns:
-    - name: "backlog"
-    - name: "todo"
-    - name: "doing"
-    - name: "testing"
-    - name: "done"
-  labels:
-    - name: "frontend"
-    - name: "backend"
-    - name: "database"
-    - name: "testing"
-    - name: "critical"
-    - name: "enhancement"
+name: "Team Sprint Board"
+description: "Sprint 23 - Q1 2024 deliverables"
+
+columns:
+  - name: "todo"
+  - name: "doing"
+  - name: "testing"
+  - name: "done"
+
+labels:
+  - name: "frontend"
+  - name: "backend"
+  - name: "database"
+  - name: "testing"
+  - name: "critical"
+  - name: "enhancement"
 
 sprints:
   - name: 23
@@ -67,7 +67,6 @@ tasks:
   105:
     title: "Performance monitoring setup"
     description: "Set up APM monitoring for production environment"
-    column: "backlog"
     labels: ["backend", "enhancement"]
     assignee: null
     storyPoints: 5
@@ -96,7 +95,7 @@ metadata:
   nextId: 108
   createdAt: "2024-01-15T00:00:00Z"
   lastModified: "2024-01-25T16:30:00Z"
-  version: "2.1"
+  version: "some-future-version"
 
 calculated:
   lastCalculated: "2024-01-25T16:30:00Z"

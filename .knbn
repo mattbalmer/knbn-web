@@ -1,17 +1,17 @@
-configuration:
-  name: KnBn Web
-  description: Development board for the KnBn Web viewer
-  columns:
-    - name: backlog
-    - name: todo
-    - name: working
-    - name: done
+name: KnBn Web
+description: Development board for the KnBn Web viewer
+columns:
+  - name: todo
+  - name: working
+  - name: done
+labels: []
 tasks:
   '1':
     id: 1
     title: Remove CWD print
     description: ''
     column: done
+    sprint: Alpha
     dates:
       created: '2025-06-29T18:56:24.822Z'
       updated: '2025-06-29T18:59:00.000Z'
@@ -29,10 +29,11 @@ tasks:
     id: 3
     title: Show Backlog in Backlog tab
     description: ''
-    column: backlog
+    column: todo
     dates:
       created: '2025-06-29T23:59:44.742Z'
-      updated: '2025-06-29T23:59:44.742Z'
+      updated: '2025-07-05T02:14:12.365Z'
+      moved: '2025-07-05T02:14:12.365Z'
   '4':
     id: 4
     title: Show board in sprint tab
@@ -46,7 +47,6 @@ tasks:
     id: 5
     title: Edit task dialog
     description: ''
-    column: backlog
     dates:
       created: '2025-06-30T00:12:38.013Z'
       updated: '2025-06-30T00:12:38.013Z'
@@ -66,8 +66,10 @@ sprints:
       created: '2025-06-01T00:00:00Z'
       starts: '2025-06-01T00:00:00Z'
       ends: '2025-06-08T23:59:59Z'
+dates:
+  created: '2025-06-29T00:00:00Z'
+  updated: '2025-07-05T02:14:12.365Z'
+  saved: '2025-07-05T02:14:12.365Z'
 metadata:
   nextId: 7
-  createdAt: '2025-06-29T00:00:00Z'
-  lastModified: '2025-06-30T02:11:41.722Z'
-  version: '0.1'
+  version: '0.2'

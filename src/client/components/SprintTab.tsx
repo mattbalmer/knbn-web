@@ -9,7 +9,7 @@ interface SprintTabProps {
 }
 
 const SprintTab: React.FC<SprintTabProps> = ({ board, boardPath, onTaskUpdate }) => {
-  const [selectedSprint, setSelectedSprint] = useState<string>('');
+  const [selectedSprint, setSelectedSprint] = useState<string>('no-sprint');
 
   const sprints = board.sprints || [];
   const tasks = Object.values(board.tasks);
@@ -17,7 +17,13 @@ const SprintTab: React.FC<SprintTabProps> = ({ board, boardPath, onTaskUpdate })
   const getTasksForSprint = (sprintName: string): Record<number, Task> => {
     if (!sprintName) return {};
     
-    const filteredTasks = tasks.filter(task => task.sprint === sprintName);
+    let filteredTasks: Task[];
+    if (sprintName === 'no-sprint') {
+      filteredTasks = tasks.filter(task => !task.sprint || task.sprint === '');
+    } else {
+      filteredTasks = tasks.filter(task => task.sprint === sprintName);
+    }
+    
     const taskRecord: Record<number, Task> = {};
     
     filteredTasks.forEach(task => {
@@ -38,52 +44,42 @@ const SprintTab: React.FC<SprintTabProps> = ({ board, boardPath, onTaskUpdate })
     setSelectedSprint(sprintName);
   };
 
-  if (sprints.length === 0) {
-    return (
-      <div className="tab-placeholder">
-        No sprints found. Create sprints to organize your tasks.
-      </div>
-    );
-  }
+  // Always show the sprint tab even if no sprints exist, so users can see unassigned tasks
 
   return (
     <div className="sprint-tab">
-      <div className="sprint-selector">
-        <label htmlFor="sprint-select">Sprint:</label>
-        <select 
-          id="sprint-select"
-          value={selectedSprint} 
-          onChange={(e) => handleSprintChange(e.target.value)}
-        >
-          <option value="">-- Select a sprint --</option>
-          {sprints.map((sprint) => (
-            <option key={sprint.name} value={sprint.name}>
-              {sprint.name}
-            </option>
-          ))}
-        </select>
+      <div className="sprint-header">
+        <div className="sprint-selector">
+          <label htmlFor="sprint-select">Sprint:</label>
+          <select 
+            id="sprint-select"
+            value={selectedSprint} 
+            onChange={(e) => handleSprintChange(e.target.value)}
+          >
+            <option value="no-sprint">No Sprint</option>
+            {sprints.map((sprint) => (
+              <option key={sprint.name} value={sprint.name}>
+                {sprint.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <p className="sprint-description">
+          {selectedSprint !== 'no-sprint'
+            ? <>{sprints.find(s => s.name === selectedSprint)?.description}</>
+            : <>Tasks that are not assigned to any sprint</>
+          }
+        </p>
       </div>
 
-      {selectedSprint ? (
+      {selectedSprint && (
         <div className="sprint-content">
-          <div className="sprint-info">
-            <h3>{selectedSprint}</h3>
-            {sprints.find(s => s.name === selectedSprint)?.description && (
-              <p className="sprint-description">
-                {sprints.find(s => s.name === selectedSprint)?.description}
-              </p>
-            )}
-          </div>
-          
           <KanbanBoard 
             board={createSprintBoard(selectedSprint)}
             boardPath={boardPath}
             onTaskUpdate={onTaskUpdate}
           />
-        </div>
-      ) : (
-        <div className="tab-placeholder">
-          Select a sprint to view its tasks
         </div>
       )}
     </div>

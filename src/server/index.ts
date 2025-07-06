@@ -2,7 +2,8 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import { exec } from 'child_process';
-import { loadBoard, updateTaskInBoard, saveBoard, addTaskToBoard, createBoard, KNBN_CORE_VERSION, KNBN_BOARD_VERSION } from './knbn';
+import { loadBoard, saveBoard, updateTask, createTask, KNBN_CORE_VERSION, KNBN_BOARD_VERSION } from './knbn';
+import { createBoard } from 'knbn-core/actions/board';
 import { version as KNBN_WEB_VERSION } from '../../package.json';
 
 function openBrowser(url: string): void {
@@ -78,14 +79,13 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
         return res.status(400).json({ error: 'Invalid task ID' });
       }
 
-      const board = loadBoard(boardPath);
-      const updatedTask = updateTaskInBoard(board, taskId, updates);
+      const board = updateTask(boardPath, taskId, updates);
+      const updatedTask = board.tasks[taskId];
 
       if (!updatedTask) {
         return res.status(404).json({ error: 'Task not found' });
       }
 
-      saveBoard(boardPath, board);
       res.json(updatedTask);
     } catch (error) {
       console.error('Failed to update task:', error);
@@ -107,14 +107,41 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
         return res.status(400).json({ error: 'Task title is required' });
       }
 
-      const board = loadBoard(boardPath);
-      const newTask = addTaskToBoard(board, taskData);
-
-      saveBoard(boardPath, board);
-      res.status(201).json(newTask);
+      const result = createTask(boardPath, taskData);
+      res.status(201).json(result.task);
     } catch (error) {
       console.error('Failed to create task:', error);
       res.status(500).json({ error: 'Failed to create task' });
+    }
+  });
+
+  // API endpoint to delete a task from a board file
+  app.delete('/api/boards/:boardPath(*)/tasks/:taskId', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      const taskId = parseInt(req.params.taskId);
+
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+
+      if (isNaN(taskId)) {
+        return res.status(400).json({ error: 'Invalid task ID' });
+      }
+
+      const board = loadBoard(boardPath);
+      
+      if (!board.tasks[taskId]) {
+        return res.status(404).json({ error: 'Task not found' });
+      }
+      
+      delete board.tasks[taskId];
+      saveBoard(boardPath, board);
+      
+      res.json({ success: true, taskId });
+    } catch (error) {
+      console.error('Failed to delete task:', error);
+      res.status(500).json({ error: 'Failed to delete task' });
     }
   });
 
@@ -124,15 +151,9 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
       const { name, description } = req.body;
 
       // Create the board using knbn core function
-      const filePath = createBoard(name);
+      const filePath = path.join(process.cwd(), `${name}.knbn`);
+      const board = createBoard(filePath, { name, description });
       
-      // If description is provided, update the board description
-      if (description) {
-        const board = loadBoard(filePath);
-        board.configuration.description = description;
-        saveBoard(filePath, board);
-      }
-
       // Return the board info
       const fileName = path.basename(filePath);
       res.status(201).json({
