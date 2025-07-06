@@ -32,10 +32,12 @@ const BoardViewer: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('all-tasks');
   const [showNewBoardForm, setShowNewBoardForm] = useState(false);
   const [directoryPath, setDirectoryPath] = useState<string>('');
+  const [cwd, setCwd] = useState<string>('');
 
   useEffect(() => {
     fetchBoardFiles();
     fetchVersionInfo();
+    fetchCwd();
   }, []);
 
   const fetchBoardFiles = async (path?: string) => {
@@ -67,6 +69,17 @@ const BoardViewer: React.FC = () => {
       setVersionInfo(version);
     } catch (err) {
       console.error('Failed to load version info:', err);
+    }
+  };
+
+  const fetchCwd = async () => {
+    try {
+      const response = await fetch('/api/cwd');
+      if (!response.ok) throw new Error('Failed to fetch CWD');
+      const data = await response.json();
+      setCwd(data.cwd);
+    } catch (err) {
+      console.error('Failed to load CWD:', err);
     }
   };
 
@@ -180,13 +193,23 @@ const BoardViewer: React.FC = () => {
         <div className="header-center">
           <div className="path-selector">
             <span className="path-selector-label">Directory:</span>
-            <input
-              type="text"
-              value={directoryPath}
-              onChange={(e) => handleDirectoryPathChange(e.target.value)}
-              placeholder="Enter relative path (e.g., projects/my-project)"
-              className="path-input"
-            />
+            <div className="path-input-container">
+              <input
+                type="text"
+                value={cwd}
+                disabled
+                className="path-input-cwd"
+                title="Working directory where knbn-web was launched"
+              />
+              <span className="path-separator">/</span>
+              <input
+                type="text"
+                value={directoryPath}
+                onChange={(e) => handleDirectoryPathChange(e.target.value)}
+                placeholder="Enter relative path (e.g., projects/my-project)"
+                className="path-input-relative"
+              />
+            </div>
           </div>
           <div className="board-selector">
             <span className="board-selector-label">Board:</span>

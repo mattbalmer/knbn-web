@@ -33,6 +33,13 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
     });
   });
 
+  // API endpoint to get current working directory
+  app.get('/api/cwd', (req, res) => {
+    res.json({
+      cwd: process.cwd()
+    });
+  });
+
   // API endpoint to list all .knbn files in current directory or specified path
   app.get('/api/boards', (req, res) => {
     try {
