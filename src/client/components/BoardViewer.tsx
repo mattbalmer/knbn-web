@@ -4,7 +4,7 @@ import TabNavigation, { TabType } from './TabNavigation';
 import BacklogTab from './BacklogTab';
 import SprintTab from './SprintTab';
 import ManageTab from './ManageTab';
-import VersionTooltip from './VersionTooltip';
+import Header from './Header';
 import NewBoardForm from './NewBoardForm';
 import Spinner from './Spinner';
 import { Board } from '../knbn/types';
@@ -322,106 +322,26 @@ const BoardViewer: React.FC = () => {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <header className="app-header">
-        <div className="header-left">
-          <h1 className="app-title">KnBn Board Viewer</h1>
-        </div>
-        
-        <div className="header-center">
-          <div className="path-selector">
-            <span className="path-selector-label">Directory:</span>
-            <div className="path-input-wrapper">
-              <div className="path-input-container">
-                <input
-                  type="text"
-                  value={cwd}
-                  disabled
-                  className="path-input-cwd"
-                  title="Working directory where knbn-web was launched"
-                />
-                <span className="path-separator">/</span>
-                <input
-                  ref={pathInputRef}
-                  type="text"
-                  value={directoryPathInput}
-                  onChange={handleDirectoryPathInputChange}
-                  onFocus={handleDirectoryInputFocus}
-                  onBlur={handleDirectoryInputBlur}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Enter relative path (e.g., projects/my-project)"
-                  className="path-input-relative"
-                  autoComplete="off"
-                />
-              </div>
-              {showTypeahead && directories.length > 0 && (() => {
-                const pathParts = directoryPathInput.split('/').filter(p => p.length > 0);
-                const currentInput = pathParts[pathParts.length - 1] || '';
-                const filteredDirectories = directories.filter(dir => 
-                  dir.toLowerCase().startsWith(currentInput.toLowerCase())
-                );
-                
-                return filteredDirectories.length > 0 && (
-                  <div className="typeahead-dropdown">
-                    {filteredDirectories.map((directory, index) => (
-                      <div
-                        key={directory}
-                        className={`typeahead-item ${index === selectedTypeaheadIndex ? 'selected' : ''}`}
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                        }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleTypeaheadSelect(directory);
-                        }}
-                        onMouseEnter={() => setSelectedTypeaheadIndex(index)}
-                      >
-                        📁 {directory}
-                      </div>
-                    ))}
-                  </div>
-                );
-              })()}
-            </div>
-          </div>
-          <div className="board-selector">
-            <span className="board-selector-label">Board:</span>
-            {loadingBoards ? (
-              <select disabled>
-                <option>Loading boards...</option>
-              </select>
-            ) : boardFiles.length === 0 ? (
-              <select disabled>
-                <option>No .knbn files found</option>
-              </select>
-            ) : (
-              <select 
-                value={selectedBoard} 
-                onChange={(e) => handleBoardSelect(e.target.value)}
-              >
-                <option value="">-- Select a board file --</option>
-                {boardFiles.map((file) => (
-                  <option key={file.path} value={file.path}>
-                    {file.name}
-                  </option>
-                ))}
-              </select>
-            )}
-            <button 
-              className="create-board-button"
-              onClick={handleCreateBoard}
-              disabled={loadingBoards || hasNoBoards}
-            >
-              + New Board
-            </button>
-          </div>
-        </div>
-        
-        <div className="header-right">
-          <VersionTooltip versionInfo={versionInfo} />
-        </div>
-      </header>
+      <Header
+        cwd={cwd}
+        directoryPathInput={directoryPathInput}
+        boardFiles={boardFiles}
+        selectedBoard={selectedBoard}
+        loadingBoards={loadingBoards}
+        directories={directories}
+        showTypeahead={showTypeahead}
+        selectedTypeaheadIndex={selectedTypeaheadIndex}
+        versionInfo={versionInfo}
+        onDirectoryPathInputChange={handleDirectoryPathInputChange}
+        onDirectoryInputFocus={handleDirectoryInputFocus}
+        onDirectoryInputBlur={handleDirectoryInputBlur}
+        onKeyDown={handleKeyDown}
+        onBoardSelect={handleBoardSelect}
+        onCreateBoard={handleCreateBoard}
+        onTypeaheadSelect={handleTypeaheadSelect}
+        onTypeaheadIndexChange={setSelectedTypeaheadIndex}
+        pathInputRef={pathInputRef}
+      />
 
       {error && (
         <div style={{ 
