@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import KanbanBoard from './KanbanBoard';
 import TabNavigation, { TabType } from './TabNavigation';
 import BacklogTab from './BacklogTab';
@@ -36,6 +36,7 @@ const BoardViewer: React.FC = () => {
   const [directories, setDirectories] = useState<string[]>([]);
   const [showTypeahead, setShowTypeahead] = useState(false);
   const [selectedTypeaheadIndex, setSelectedTypeaheadIndex] = useState(-1);
+  const pathInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchBoardFiles();
@@ -167,6 +168,11 @@ const BoardViewer: React.FC = () => {
     const newPath = [...parentPath, directory].join('/');
     handleDirectoryPathChange(newPath + '/');
     setShowTypeahead(false);
+    
+    // Restore focus to input after selection
+    setTimeout(() => {
+      pathInputRef.current?.focus();
+    }, 0);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -180,20 +186,27 @@ const BoardViewer: React.FC = () => {
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
+      e.stopPropagation();
       setSelectedTypeaheadIndex(prev => 
         prev < filteredDirectories.length - 1 ? prev + 1 : 0
       );
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
+      e.stopPropagation();
       setSelectedTypeaheadIndex(prev => 
         prev > 0 ? prev - 1 : filteredDirectories.length - 1
       );
     } else if (e.key === 'Enter' && selectedTypeaheadIndex >= 0) {
       e.preventDefault();
+      e.stopPropagation();
       handleTypeaheadSelect(filteredDirectories[selectedTypeaheadIndex]);
     } else if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
       setShowTypeahead(false);
       setSelectedTypeaheadIndex(-1);
+      // Ensure input stays focused
+      pathInputRef.current?.focus();
     }
   };
 
@@ -278,6 +291,7 @@ const BoardViewer: React.FC = () => {
                 />
                 <span className="path-separator">/</span>
                 <input
+                  ref={pathInputRef}
                   type="text"
                   value={directoryPath}
                   onChange={(e) => handleDirectoryPathChange(e.target.value)}
@@ -302,8 +316,15 @@ const BoardViewer: React.FC = () => {
                       <div
                         key={directory}
                         className={`typeahead-item ${index === selectedTypeaheadIndex ? 'selected' : ''}`}
-                        onMouseDown={(e) => e.preventDefault()}
-                        onClick={() => handleTypeaheadSelect(directory)}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleTypeaheadSelect(directory);
+                        }}
                         onMouseEnter={() => setSelectedTypeaheadIndex(index)}
                       >
                         📁 {directory}
