@@ -96,7 +96,7 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   const handleDirectoryInputFocus = () => {
-    const pathParts = directoryPathInput.split('/').filter(p => p.length > 0);
+    const pathParts = directoryPath.split('/').filter(p => p.length > 0);
     const parentPath = pathParts.slice(0, -1).join('/');
     fetchDirectories(parentPath);
     setShowTypeahead(true);
@@ -167,13 +167,14 @@ const Header: React.FC<HeaderProps> = ({
       clearTimeout(validationTimeoutRef.current);
     }
     
-    // Get the parent directory for typeahead suggestions
-    const pathParts = inputValue.split('/').filter(p => p.length > 0);
-    const parentPath = pathParts.slice(0, -1).join('/');
+    // Get the parent directory for typeahead suggestions from validated path
+    const pathParts = directoryPath.split('/').filter(p => p.length > 0);
+    const parentPath = pathParts.join('/');
     fetchDirectories(parentPath);
     
-    // Show typeahead if there's partial input
-    const currentInput = pathParts[pathParts.length - 1] || '';
+    // Show typeahead if there's partial input  
+    const inputParts = inputValue.split('/').filter(p => p.length > 0);
+    const currentInput = inputParts[inputParts.length - 1] || '';
     setShowTypeahead(currentInput.length > 0 || inputValue.endsWith('/'));
     
     // Debounced validation - only validate if the path looks complete (ends with '/' or has no partial segment)

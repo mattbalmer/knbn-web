@@ -31,7 +31,6 @@ const BoardViewer: React.FC = () => {
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>('all-tasks');
   const [showNewBoardForm, setShowNewBoardForm] = useState(false);
-  const [directoryPath, setDirectoryPath] = useState<string>('');
 
   useEffect(() => {
     fetchBoardFiles();
@@ -106,7 +105,6 @@ const BoardViewer: React.FC = () => {
 
 
   const handleDirectoryChange = (path: string) => {
-    setDirectoryPath(path);
     fetchBoardFiles(path);
     setSelectedBoard('');
     setBoardContent(null);
