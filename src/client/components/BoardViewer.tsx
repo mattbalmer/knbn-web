@@ -31,24 +31,29 @@ const BoardViewer: React.FC = () => {
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>('all-tasks');
   const [showNewBoardForm, setShowNewBoardForm] = useState(false);
+  const [directoryPath, setDirectoryPath] = useState<string>('');
 
   useEffect(() => {
     fetchBoardFiles();
     fetchVersionInfo();
   }, []);
 
-  const fetchBoardFiles = async () => {
+  const fetchBoardFiles = async (path?: string) => {
     setLoadingBoards(true);
     try {
-      const response = await fetch('/api/boards');
-      if (!response.ok) throw new Error('Failed to fetch board files');
+      const url = path ? `/api/boards?path=${encodeURIComponent(path)}` : '/api/boards';
+      const response = await fetch(url);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch board files');
+      }
       const files = await response.json();
       setBoardFiles(files);
       if (!selectedBoard && files?.[0]) {
         handleBoardSelect(files[0].path);
       }
     } catch (err) {
-      setError('Failed to load board files');
+      setError(err instanceof Error ? err.message : 'Failed to load board files');
     } finally {
       setLoadingBoards(false);
     }
@@ -96,6 +101,13 @@ const BoardViewer: React.FC = () => {
 
   const handleCancelNewBoard = () => {
     setShowNewBoardForm(false);
+  };
+
+  const handleDirectoryPathChange = (path: string) => {
+    setDirectoryPath(path);
+    setSelectedBoard('');
+    setBoardContent(null);
+    fetchBoardFiles(path);
   };
 
   const renderTabContent = () => {
@@ -166,6 +178,16 @@ const BoardViewer: React.FC = () => {
         </div>
         
         <div className="header-center">
+          <div className="path-selector">
+            <span className="path-selector-label">Directory:</span>
+            <input
+              type="text"
+              value={directoryPath}
+              onChange={(e) => handleDirectoryPathChange(e.target.value)}
+              placeholder="Enter relative path (e.g., projects/my-project)"
+              className="path-input"
+            />
+          </div>
           <div className="board-selector">
             <span className="board-selector-label">Board:</span>
             {loadingBoards ? (

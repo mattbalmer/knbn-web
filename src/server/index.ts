@@ -33,16 +33,35 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
     });
   });
 
-  // API endpoint to list all .knbn files in current directory
+  // API endpoint to list all .knbn files in current directory or specified path
   app.get('/api/boards', (req, res) => {
     try {
       const cwd = process.cwd();
-      const files = fs.readdirSync(cwd);
+      const requestedPath = req.query.path as string || '';
+      
+      // Validate and sanitize the path
+      const sanitizedPath = requestedPath.replace(/\.\./g, '').replace(/^\/+/, '');
+      const targetDir = path.join(cwd, sanitizedPath);
+      
+      // Security check: ensure the target directory is within the CWD
+      const resolvedTarget = path.resolve(targetDir);
+      const resolvedCwd = path.resolve(cwd);
+      
+      if (!resolvedTarget.startsWith(resolvedCwd)) {
+        return res.status(403).json({ error: 'Access denied: Path outside working directory' });
+      }
+      
+      // Check if the directory exists
+      if (!fs.existsSync(targetDir) || !fs.statSync(targetDir).isDirectory()) {
+        return res.status(404).json({ error: 'Directory not found' });
+      }
+      
+      const files = fs.readdirSync(targetDir);
       const knbnFiles = files
         .filter(file => file.endsWith('.knbn'))
         .map(file => ({
           name: file,
-          path: path.join(cwd, file)
+          path: path.join(targetDir, file)
         }));
       res.json(knbnFiles);
     } catch (error) {

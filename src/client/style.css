@@ -340,6 +340,8 @@
 .header-center {
   flex: 1;
   display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .header-right {
@@ -353,6 +355,36 @@
   font-size: 1.5em;
   color: #333;
   font-weight: 600;
+}
+
+.path-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.path-selector-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+  white-space: nowrap;
+}
+
+.path-input {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background: white;
+  color: #495057;
+  min-width: 300px;
+  flex: 1;
+}
+
+.path-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 .board-selector {
@@ -735,6 +767,17 @@
   .header-right {
     width: 100%;
     justify-content: center;
+  }
+  
+  .path-selector {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  
+  .path-input {
+    min-width: unset;
+    width: 100%;
   }
   
   .board-selector {
