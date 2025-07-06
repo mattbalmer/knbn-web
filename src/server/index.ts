@@ -5,6 +5,7 @@ import { exec } from 'child_process';
 import { loadBoard, saveBoard, updateTask, createTask, KNBN_CORE_VERSION, KNBN_BOARD_VERSION } from './knbn';
 import { createBoard } from 'knbn-core/actions/board';
 import { version as KNBN_WEB_VERSION } from '../../package.json';
+import { getCWD } from './utils';
 
 function openBrowser(url: string): void {
   const start = (process.platform === 'darwin' ? 'open' : 
@@ -36,14 +37,14 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
   // API endpoint to get current working directory
   app.get('/api/cwd', (req, res) => {
     res.json({
-      cwd: process.cwd()
+      cwd: getCWD()
     });
   });
 
   // API endpoint to list directories at a given path
   app.get('/api/directories', (req, res) => {
     try {
-      const cwd = process.cwd();
+      const cwd = getCWD();
       const requestedPath = req.query.path as string || '';
       
       // Validate and sanitize the path
@@ -80,7 +81,7 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
   // API endpoint to list all .knbn files in current directory or specified path
   app.get('/api/boards', (req, res) => {
     try {
-      const cwd = process.cwd();
+      const cwd = getCWD();
       const requestedPath = req.query.path as string || '';
       
       // Validate and sanitize the path
@@ -214,7 +215,7 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
       const { name, description } = req.body;
 
       // Create the board using knbn core function
-      const filePath = path.join(process.cwd(), `${name}.knbn`);
+      const filePath = path.join(getCWD(), `${name}.knbn`);
       const board = createBoard(filePath, { name, description });
       
       // Return the board info
