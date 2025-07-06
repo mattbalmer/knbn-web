@@ -40,6 +40,43 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
     });
   });
 
+  // API endpoint to list directories at a given path
+  app.get('/api/directories', (req, res) => {
+    try {
+      const cwd = process.cwd();
+      const requestedPath = req.query.path as string || '';
+      
+      // Validate and sanitize the path
+      const sanitizedPath = requestedPath.replace(/\.\./g, '').replace(/^\/+/, '');
+      const targetDir = path.join(cwd, sanitizedPath);
+      
+      // Security check: ensure the target directory is within the CWD
+      const resolvedTarget = path.resolve(targetDir);
+      const resolvedCwd = path.resolve(cwd);
+      
+      if (!resolvedTarget.startsWith(resolvedCwd)) {
+        return res.status(403).json({ error: 'Access denied: Path outside working directory' });
+      }
+      
+      // Check if the directory exists
+      if (!fs.existsSync(targetDir) || !fs.statSync(targetDir).isDirectory()) {
+        return res.json({ directories: [] });
+      }
+      
+      const items = fs.readdirSync(targetDir);
+      const directories = items
+        .filter(item => {
+          const itemPath = path.join(targetDir, item);
+          return fs.statSync(itemPath).isDirectory() && !item.startsWith('.');
+        })
+        .sort();
+      
+      res.json({ directories });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to list directories' });
+    }
+  });
+
   // API endpoint to list all .knbn files in current directory or specified path
   app.get('/api/boards', (req, res) => {
     try {

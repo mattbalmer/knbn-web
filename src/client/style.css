@@ -370,6 +370,11 @@
   white-space: nowrap;
 }
 
+.path-input-wrapper {
+  position: relative;
+  flex: 1;
+}
+
 .path-input-container {
   display: flex;
   align-items: center;
@@ -428,6 +433,42 @@
 .path-input-relative::placeholder {
   color: #6c757d;
   font-style: italic;
+}
+
+.typeahead-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ced4da;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.typeahead-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #495057;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.typeahead-item:hover,
+.typeahead-item.selected {
+  background: #f8f9fa;
+  color: #007bff;
+}
+
+.typeahead-item.selected {
+  background: #e3f2fd;
 }
 
 .board-selector {
@@ -818,6 +859,10 @@
     width: 100%;
   }
   
+  .path-input-wrapper {
+    width: 100%;
+  }
+  
   .path-input-container {
     min-width: unset;
     width: 100%;
@@ -829,6 +874,11 @@
   
   .path-input-relative {
     font-size: 12px;
+  }
+  
+  .typeahead-item {
+    font-size: 12px;
+    padding: 6px 10px;
   }
   
   .board-selector {
