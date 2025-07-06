@@ -32,16 +32,27 @@ const BoardViewer: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('all-tasks');
   const [showNewBoardForm, setShowNewBoardForm] = useState(false);
   const [directoryPath, setDirectoryPath] = useState<string>('');
+  const [directoryPathInput, setDirectoryPathInput] = useState<string>('');
   const [cwd, setCwd] = useState<string>('');
   const [directories, setDirectories] = useState<string[]>([]);
   const [showTypeahead, setShowTypeahead] = useState(false);
   const [selectedTypeaheadIndex, setSelectedTypeaheadIndex] = useState(-1);
   const pathInputRef = useRef<HTMLInputElement>(null);
+  const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     fetchBoardFiles();
     fetchVersionInfo();
     fetchCwd();
+  }, []);
+
+  useEffect(() => {
+    // Cleanup timeout on unmount
+    return () => {
+      if (validationTimeoutRef.current) {
+        clearTimeout(validationTimeoutRef.current);
+      }
+    };
   }, []);
 
   const fetchBoardFiles = async (path?: string) => {
@@ -100,6 +111,16 @@ const BoardViewer: React.FC = () => {
     }
   };
 
+  const validateDirectory = async (path: string) => {
+    try {
+      const url = `/api/directories?path=${encodeURIComponent(path)}`;
+      const response = await fetch(url);
+      return response.ok;
+    } catch (err) {
+      return false;
+    }
+  };
+
   const fetchBoardContent = async (boardPath: string) => {
     setLoading(true);
     setError('');
@@ -133,25 +154,9 @@ const BoardViewer: React.FC = () => {
     setShowNewBoardForm(false);
   };
 
-  const handleDirectoryPathChange = (path: string) => {
-    setDirectoryPath(path);
-    setSelectedBoard('');
-    setBoardContent(null);
-    setSelectedTypeaheadIndex(-1);
-    fetchBoardFiles(path);
-    
-    // Get the parent directory for typeahead suggestions
-    const pathParts = path.split('/').filter(p => p.length > 0);
-    const parentPath = pathParts.slice(0, -1).join('/');
-    fetchDirectories(parentPath);
-    
-    // Show typeahead if there's partial input
-    const currentInput = pathParts[pathParts.length - 1] || '';
-    setShowTypeahead(currentInput.length > 0 || path.endsWith('/'));
-  };
 
   const handleDirectoryInputFocus = () => {
-    const pathParts = directoryPath.split('/').filter(p => p.length > 0);
+    const pathParts = directoryPathInput.split('/').filter(p => p.length > 0);
     const parentPath = pathParts.slice(0, -1).join('/');
     fetchDirectories(parentPath);
     setShowTypeahead(true);
@@ -163,10 +168,14 @@ const BoardViewer: React.FC = () => {
   };
 
   const handleTypeaheadSelect = (directory: string) => {
-    const pathParts = directoryPath.split('/').filter(p => p.length > 0);
+    const pathParts = directoryPathInput.split('/').filter(p => p.length > 0);
     const parentPath = pathParts.slice(0, -1);
-    const newPath = [...parentPath, directory].join('/');
-    handleDirectoryPathChange(newPath + '/');
+    const newPath = [...parentPath, directory].join('/') + '/';
+    setDirectoryPathInput(newPath);
+    setDirectoryPath(newPath);
+    fetchBoardFiles(newPath);
+    setSelectedBoard('');
+    setBoardContent(null);
     setShowTypeahead(false);
     
     // Restore focus to input after selection
@@ -178,7 +187,7 @@ const BoardViewer: React.FC = () => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!showTypeahead || directories.length === 0) return;
 
-    const pathParts = directoryPath.split('/').filter(p => p.length > 0);
+    const pathParts = directoryPathInput.split('/').filter(p => p.length > 0);
     const currentInput = pathParts[pathParts.length - 1] || '';
     const filteredDirectories = directories.filter(dir => 
       dir.toLowerCase().startsWith(currentInput.toLowerCase())
@@ -207,6 +216,47 @@ const BoardViewer: React.FC = () => {
       setSelectedTypeaheadIndex(-1);
       // Ensure input stays focused
       pathInputRef.current?.focus();
+    }
+  };
+
+  const handleDirectoryPathInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    setDirectoryPathInput(inputValue);
+    setSelectedTypeaheadIndex(-1);
+    
+    // Clear any existing timeout
+    if (validationTimeoutRef.current) {
+      clearTimeout(validationTimeoutRef.current);
+    }
+    
+    // Get the parent directory for typeahead suggestions
+    const pathParts = inputValue.split('/').filter(p => p.length > 0);
+    const parentPath = pathParts.slice(0, -1).join('/');
+    fetchDirectories(parentPath);
+    
+    // Show typeahead if there's partial input
+    const currentInput = pathParts[pathParts.length - 1] || '';
+    setShowTypeahead(currentInput.length > 0 || inputValue.endsWith('/'));
+    
+    // Debounced validation - only validate if the path looks complete (ends with '/' or has no partial segment)
+    if (inputValue === '' || inputValue.endsWith('/')) {
+      // Immediate validation for empty or complete paths
+      validateAndUpdate(inputValue);
+    } else {
+      // Debounced validation for partial paths
+      validationTimeoutRef.current = setTimeout(() => {
+        validateAndUpdate(inputValue);
+      }, 500);
+    }
+  };
+
+  const validateAndUpdate = async (path: string) => {
+    const isValid = path === '' || await validateDirectory(path);
+    if (isValid) {
+      setDirectoryPath(path);
+      fetchBoardFiles(path);
+      setSelectedBoard('');
+      setBoardContent(null);
     }
   };
 
@@ -293,8 +343,8 @@ const BoardViewer: React.FC = () => {
                 <input
                   ref={pathInputRef}
                   type="text"
-                  value={directoryPath}
-                  onChange={(e) => handleDirectoryPathChange(e.target.value)}
+                  value={directoryPathInput}
+                  onChange={handleDirectoryPathInputChange}
                   onFocus={handleDirectoryInputFocus}
                   onBlur={handleDirectoryInputBlur}
                   onKeyDown={handleKeyDown}
@@ -304,7 +354,7 @@ const BoardViewer: React.FC = () => {
                 />
               </div>
               {showTypeahead && directories.length > 0 && (() => {
-                const pathParts = directoryPath.split('/').filter(p => p.length > 0);
+                const pathParts = directoryPathInput.split('/').filter(p => p.length > 0);
                 const currentInput = pathParts[pathParts.length - 1] || '';
                 const filteredDirectories = directories.filter(dir => 
                   dir.toLowerCase().startsWith(currentInput.toLowerCase())

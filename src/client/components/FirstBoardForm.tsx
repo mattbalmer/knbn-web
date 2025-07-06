@@ -60,7 +60,6 @@ const FirstBoardForm: React.FC<NewBoardFormProps> = ({ onBoardCreated }) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Leave empty to create .knbn"
-            autoFocus
           />
           <small className="form-help">
             If left empty, will create ".knbn". Otherwise creates "[name].knbn"
