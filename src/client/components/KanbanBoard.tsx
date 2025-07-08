@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Board, Task } from '../knbn/types';
 import NewTaskForm from './NewTaskForm';
+import EditTaskModal from './EditTaskModal';
 
 interface KanbanBoardProps {
   board: Board;
@@ -14,6 +15,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   const [draggedOver, setDraggedOver] = useState<string | null>(null);
   const [showNewTaskForm, setShowNewTaskForm] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const getTasksForColumn = (columnName: string): Task[] => {
     if (columnName === 'Backlog') {
@@ -99,6 +101,24 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
     setShowNewTaskForm(false);
   };
 
+  const handleTaskClick = (task: Task) => {
+    setEditingTask(task);
+  };
+
+  const handleEditTaskComplete = () => {
+    setEditingTask(null);
+    onTaskUpdate?.();
+  };
+
+  const handleEditTaskCancel = () => {
+    setEditingTask(null);
+  };
+
+  const handleTaskDelete = () => {
+    setEditingTask(null);
+    onTaskUpdate?.();
+  };
+
   const columns = showBacklog ? [{ name: 'Backlog' }, ...(board.columns || [])] : (board.columns || []);
 
   return (
@@ -138,6 +158,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
                   draggable
                   onDragStart={(e) => handleDragStart(e, task)}
                   onDragEnd={handleDragEnd}
+                  onClick={() => handleTaskClick(task)}
+                  style={{ cursor: 'pointer' }}
                 >
                   <div className="task-header">
                     <h4 className="task-title">{task.title}</h4>
@@ -179,6 +201,17 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
           boardPath={boardPath}
           onTaskCreated={handleTaskCreated}
           onCancel={handleCancelNewTask}
+        />
+      )}
+
+      {editingTask && boardPath && (
+        <EditTaskModal
+          task={editingTask}
+          board={board}
+          boardPath={boardPath}
+          onTaskUpdated={handleEditTaskComplete}
+          onCancel={handleEditTaskCancel}
+          onDelete={handleTaskDelete}
         />
       )}
     </div>
