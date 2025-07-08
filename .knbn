@@ -49,7 +49,9 @@ tasks:
     description: ''
     dates:
       created: '2025-06-30T00:12:38.013Z'
-      updated: '2025-06-30T00:12:38.013Z'
+      updated: '2025-07-08T16:29:19.680Z'
+      moved: '2025-07-08T16:29:19.680Z'
+    column: todo
   '6':
     id: 6
     title: Automatically open a browser to the URL on server start
@@ -94,8 +96,8 @@ sprints:
       ends: '2025-06-08T23:59:59Z'
 dates:
   created: '2025-06-29T00:00:00Z'
-  updated: '2025-07-06T03:05:23.878Z'
-  saved: '2025-07-06T03:05:23.878Z'
+  updated: '2025-07-08T16:29:19.680Z'
+  saved: '2025-07-08T16:29:19.680Z'
 metadata:
   nextId: 10
   version: '0.2'
