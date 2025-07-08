@@ -1903,3 +1903,242 @@
     padding: 10px;
   }
 }
+
+/* Sprint Management Styles */
+.sprints-section {
+  margin-top: 12px;
+}
+
+.sprints-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.create-sprint-button {
+  background: #8e44ad;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.create-sprint-button:hover {
+  background: #7d3c98;
+  transform: translateY(-1px);
+}
+
+.create-sprint-button:active {
+  transform: translateY(0);
+}
+
+.sprints-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sprint-item {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  border-left: 4px solid #8e44ad;
+}
+
+.sprint-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sprint-item.sprint-active {
+  border-left-color: #28a745;
+  background: #f8fff8;
+}
+
+.sprint-item.sprint-upcoming {
+  border-left-color: #ffc107;
+  background: #fffdf5;
+}
+
+.sprint-item.sprint-completed {
+  border-left-color: #6c757d;
+  background: #f8f9fa;
+}
+
+.sprint-info {
+  width: 100%;
+}
+
+.sprint-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.sprint-name {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #333;
+}
+
+.sprint-status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75em;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sprint-status-active {
+  background: #28a745;
+  color: white;
+}
+
+.sprint-status-upcoming {
+  background: #ffc107;
+  color: #333;
+}
+
+.sprint-status-completed {
+  background: #6c757d;
+  color: white;
+}
+
+.sprint-description {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.sprint-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.85em;
+  color: #6c757d;
+}
+
+.sprint-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sprint-capacity {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #8e44ad;
+  font-weight: 500;
+}
+
+.no-sprints-message {
+  text-align: center;
+  padding: 40px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.no-sprints-message p {
+  margin: 0;
+}
+
+/* Sprint Edit Modal Form Styles */
+.edit-task-modal .form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.edit-task-modal .form-row .form-group {
+  flex: 1;
+}
+
+.edit-task-modal .form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+.edit-task-modal .form-group input,
+.edit-task-modal .form-group textarea,
+.edit-task-modal .form-group select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.edit-task-modal .form-group input:focus,
+.edit-task-modal .form-group textarea:focus,
+.edit-task-modal .form-group select:focus {
+  outline: none;
+  border-color: #8e44ad;
+  box-shadow: 0 0 0 2px rgba(142, 68, 173, 0.25);
+}
+
+.edit-task-modal .form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.edit-task-modal .form-group input[type="date"] {
+  cursor: pointer;
+}
+
+.edit-task-modal .form-group input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.edit-task-modal .form-group input[type="number"]::-webkit-outer-spin-button,
+.edit-task-modal .form-group input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Responsive design for sprint management */
+@media (max-width: 768px) {
+  .sprints-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .create-sprint-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .sprint-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .sprint-details {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .edit-task-modal .form-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+}

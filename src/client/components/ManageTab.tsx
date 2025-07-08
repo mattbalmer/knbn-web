@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Board, Label, Column } from '../knbn/types';
+import { Board, Label, Column, Sprint } from '../knbn/types';
 import LabelEditModal from './LabelEditModal';
 import ColumnEditModal from './ColumnEditModal';
+import SprintEditModal from './SprintEditModal';
 
 interface ManageTabProps {
   board: Board;
@@ -14,6 +15,8 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
   const [showNewLabelModal, setShowNewLabelModal] = useState(false);
   const [editingColumn, setEditingColumn] = useState<Column | null>(null);
   const [showNewColumnModal, setShowNewColumnModal] = useState(false);
+  const [editingSprint, setEditingSprint] = useState<Sprint | null>(null);
+  const [showNewSprintModal, setShowNewSprintModal] = useState(false);
 
   const handleLabelSaved = () => {
     setEditingLabel(null);
@@ -79,6 +82,52 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
       console.error('Error moving column:', error);
       alert('Failed to move column');
     }
+  };
+
+  const handleSprintSaved = () => {
+    setEditingSprint(null);
+    setShowNewSprintModal(false);
+    onBoardUpdate();
+  };
+
+  const handleCancelSprintEdit = () => {
+    setEditingSprint(null);
+    setShowNewSprintModal(false);
+  };
+
+  const handleSprintClick = (sprint: Sprint) => {
+    setEditingSprint(sprint);
+  };
+
+  const handleCreateNewSprint = () => {
+    setShowNewSprintModal(true);
+  };
+
+  const formatSprintDate = (dateString: string | undefined): string => {
+    if (!dateString) return '';
+    return new Date(dateString).toLocaleDateString();
+  };
+
+  const getSprintStatus = (sprint: Sprint): 'active' | 'upcoming' | 'completed' => {
+    const now = new Date();
+    const startDate = sprint.dates?.starts ? new Date(sprint.dates.starts) : null;
+    const endDate = sprint.dates?.ends ? new Date(sprint.dates.ends) : null;
+    
+    if (startDate && endDate) {
+      if (now >= startDate && now <= endDate) {
+        return 'active';
+      } else if (now < startDate) {
+        return 'upcoming';
+      } else {
+        return 'completed';
+      }
+    } else if (startDate && now >= startDate) {
+      return 'active';
+    } else if (startDate && now < startDate) {
+      return 'upcoming';
+    }
+    
+    return 'upcoming';
   };
 
   return (
@@ -179,9 +228,64 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
       </div>
 
       <div className="manage-section">
-        <h3>Other Settings</h3>
-        <div className="tab-placeholder">
-          TODO: Additional management features - columns, sprints, board settings
+        <h3>Sprints</h3>
+        <div className="sprints-section">
+          <div className="sprints-header">
+            <button
+              className="create-sprint-button"
+              onClick={handleCreateNewSprint}
+            >
+              + Create New Sprint
+            </button>
+          </div>
+          
+          {board.sprints && board.sprints.length > 0 ? (
+            <div className="sprints-list">
+              {board.sprints.map((sprint) => {
+                const status = getSprintStatus(sprint);
+                return (
+                  <div 
+                    key={sprint.name} 
+                    className={`sprint-item sprint-${status}`}
+                    onClick={() => handleSprintClick(sprint)}
+                  >
+                    <div className="sprint-info">
+                      <div className="sprint-header">
+                        <span className="sprint-name">{sprint.name}</span>
+                        <span className={`sprint-status sprint-status-${status}`}>
+                          {status}
+                        </span>
+                      </div>
+                      {sprint.description && (
+                        <div className="sprint-description">{sprint.description}</div>
+                      )}
+                      <div className="sprint-details">
+                        {sprint.dates?.starts && (
+                          <span className="sprint-date">
+                            Start: {formatSprintDate(sprint.dates.starts)}
+                          </span>
+                        )}
+                        {sprint.dates?.ends && (
+                          <span className="sprint-date">
+                            End: {formatSprintDate(sprint.dates.ends)}
+                          </span>
+                        )}
+                        {sprint.capacity && (
+                          <span className="sprint-capacity">
+                            Capacity: {sprint.capacity} pts
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="no-sprints-message">
+              <p>No sprints created yet. Click "Create New Sprint" to get started.</p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -200,6 +304,15 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
           boardPath={boardPath}
           onColumnSaved={handleColumnSaved}
           onCancel={handleCancelColumnEdit}
+        />
+      )}
+
+      {(editingSprint || showNewSprintModal) && (
+        <SprintEditModal
+          sprint={editingSprint || undefined}
+          boardPath={boardPath}
+          onSprintSaved={handleSprintSaved}
+          onCancel={handleCancelSprintEdit}
         />
       )}
     </div>

@@ -6,6 +6,7 @@ import { loadBoard, saveBoard, updateTask, createTask, KNBN_CORE_VERSION, KNBN_B
 import { createBoard } from 'knbn-core/actions/board';
 import { addLabel, updateLabel, removeLabel, listLabels } from 'knbn-core/actions/label';
 import { createColumn, updateColumn, removeColumn, moveColumn, listColumns } from 'knbn-core/actions/column';
+import { addSprint, updateSprint, removeSprint, listSprints } from 'knbn-core/actions/sprint';
 import { version as KNBN_WEB_VERSION } from '../../package.json';
 import { getCWD } from './utils';
 
@@ -543,6 +544,142 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
         res.status(404).json({ error: error.message });
       } else {
         res.status(500).json({ error: 'Failed to remove column' });
+      }
+    }
+  });
+
+  // API endpoint to list sprints in a board
+  app.get('/api/boards/:boardPath(*)/sprints', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+      
+      const sprints = listSprints(boardPath);
+      res.json(sprints);
+    } catch (error) {
+      console.error('Failed to list sprints:', error);
+      res.status(500).json({ error: 'Failed to list sprints' });
+    }
+  });
+
+  // API endpoint to create a sprint in a board
+  app.post('/api/boards/:boardPath(*)/sprints', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      const sprintData = req.body;
+
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+
+      if (!sprintData.name) {
+        return res.status(400).json({ error: 'Sprint name is required' });
+      }
+
+      const sprint = addSprint(boardPath, sprintData);
+      res.status(201).json(sprint);
+    } catch (error) {
+      console.error('Failed to create sprint:', error);
+      if (error instanceof Error && error.message.includes('already exists')) {
+        res.status(409).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Failed to create sprint' });
+      }
+    }
+  });
+
+  // API endpoint to update a sprint in a board
+  app.put('/api/boards/:boardPath(*)/sprints/:sprintName', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      const sprintName = decodeURIComponent(req.params.sprintName);
+      const updates = req.body;
+
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+
+      // Check if sprint name is being changed
+      const isRenaming = updates.name && updates.name !== sprintName;
+      
+      const sprint = updateSprint(boardPath, sprintName, updates);
+
+      // If sprint was renamed, update all tasks that reference the old sprint name
+      if (isRenaming) {
+        const board = loadBoard(boardPath);
+        const boardAfterTaskUpdates = { ...board };
+        let tasksUpdated = false;
+        
+        // Update tasks that have the old sprint name
+        Object.values(boardAfterTaskUpdates.tasks).forEach((task) => {
+          if (task.sprint === sprintName) {
+            task.sprint = updates.name;
+            task.dates.updated = new Date().toISOString();
+            tasksUpdated = true;
+          }
+        });
+        
+        // Save the board with updated tasks if any were modified
+        if (tasksUpdated) {
+          boardAfterTaskUpdates.dates.updated = new Date().toISOString();
+          saveBoard(boardPath, boardAfterTaskUpdates);
+        }
+      }
+
+      res.json(sprint);
+    } catch (error) {
+      console.error('Failed to update sprint:', error);
+      if (error instanceof Error && error.message.includes('not found')) {
+        res.status(404).json({ error: error.message });
+      } else if (error instanceof Error && error.message.includes('already exists')) {
+        res.status(409).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Failed to update sprint' });
+      }
+    }
+  });
+
+  // API endpoint to remove a sprint from a board
+  app.delete('/api/boards/:boardPath(*)/sprints/:sprintName', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      const sprintName = decodeURIComponent(req.params.sprintName);
+
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+
+      // Remove the sprint from the board
+      removeSprint(boardPath, sprintName);
+      
+      // Remove the sprint from all tasks that reference it
+      const board = loadBoard(boardPath);
+      const boardAfterTaskUpdates = { ...board };
+      let tasksUpdated = false;
+      
+      Object.values(boardAfterTaskUpdates.tasks).forEach((task) => {
+        if (task.sprint === sprintName) {
+          task.sprint = undefined;
+          task.dates.updated = new Date().toISOString();
+          tasksUpdated = true;
+        }
+      });
+      
+      // Save the board with updated tasks if any were modified
+      if (tasksUpdated) {
+        boardAfterTaskUpdates.dates.updated = new Date().toISOString();
+        saveBoard(boardPath, boardAfterTaskUpdates);
+      }
+      
+      res.json({ success: true, sprintName });
+    } catch (error) {
+      console.error('Failed to remove sprint:', error);
+      if (error instanceof Error && error.message.includes('not found')) {
+        res.status(404).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Failed to remove sprint' });
       }
     }
   });
