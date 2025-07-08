@@ -186,11 +186,18 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
                     
                     {task.labels && task.labels.length > 0 && (
                       <div className="task-labels">
-                        {task.labels.map((label, index) => (
-                          <span key={index} className="task-label">
-                            {label}
-                          </span>
-                        ))}
+                        {task.labels.map((labelName, index) => {
+                          const labelColor = board.labels?.find(l => l.name === labelName)?.color;
+                          return (
+                            <span 
+                              key={index} 
+                              className="task-label"
+                              style={labelColor ? { backgroundColor: labelColor } : {}}
+                            >
+                              {labelName}
+                            </span>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
