@@ -35,6 +35,17 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
     setStoryPoints(task.storyPoints?.toString() || '');
   }, [task]);
 
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onCancel();
+      }
+    };
+    
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [onCancel]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -99,7 +110,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
     <div className="edit-task-overlay">
       <div className="edit-task-modal">
         <div className="modal-header">
-          <h3>Edit Task #{task.id}</h3>
+          <h3>#{task.id} - {task.title}</h3>
           <button 
             className="close-button"
             onClick={onCancel}
