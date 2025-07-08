@@ -6,9 +6,9 @@ columns:
   - name: done
 labels:
   - name: Feature
-    color: '#FF5733'
+    color: '#2caf2e'
   - name: Bug
-    color: '#33FF57'
+    color: '#ad2e2e'
   - name: UX
     color: '#3357FF'
 tasks:
@@ -109,8 +109,8 @@ sprints:
       ends: '2025-06-08T23:59:59Z'
 dates:
   created: '2025-06-29T00:00:00Z'
-  updated: '2025-07-08T16:48:53.044Z'
-  saved: '2025-07-08T16:48:53.044Z'
+  updated: '2025-07-08T17:23:14.965Z'
+  saved: '2025-07-08T17:23:14.965Z'
 metadata:
   nextId: 10
   version: '0.2'

@@ -264,11 +264,41 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
         return res.status(404).json({ error: 'Board file not found' });
       }
 
+      // Check if label name is being changed
+      const isRenaming = updates.name && updates.name !== labelName;
+      
+      // Update the label in the board
       const board = updateLabel(boardPath, labelName, updates);
       const updatedLabel = board.labels?.find(l => l.name === (updates.name || labelName));
       
       if (!updatedLabel) {
         return res.status(404).json({ error: 'Label not found' });
+      }
+
+      // If label was renamed, update all tasks that reference the old label name
+      if (isRenaming) {
+        const boardAfterTaskUpdates = { ...board };
+        let tasksUpdated = false;
+        
+        // Update tasks that have the old label name
+        Object.keys(boardAfterTaskUpdates.tasks).forEach(taskId => {
+          const task = boardAfterTaskUpdates.tasks[parseInt(taskId)];
+          if (task.labels && task.labels.includes(labelName)) {
+            // Replace old label name with new label name
+            task.labels = task.labels.map(label => 
+              label === labelName ? updates.name : label
+            );
+            // Update task's updated timestamp
+            task.dates.updated = new Date().toISOString();
+            tasksUpdated = true;
+          }
+        });
+        
+        // Save the board with updated tasks if any were modified
+        if (tasksUpdated) {
+          boardAfterTaskUpdates.dates.updated = new Date().toISOString();
+          saveBoard(boardPath, boardAfterTaskUpdates);
+        }
       }
 
       res.json(updatedLabel);
@@ -294,7 +324,30 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
         return res.status(404).json({ error: 'Board file not found' });
       }
 
+      // Remove the label from the board
       const board = removeLabel(boardPath, labelName);
+      
+      // Remove the label from all tasks that reference it
+      const boardAfterTaskUpdates = { ...board };
+      let tasksUpdated = false;
+      
+      Object.keys(boardAfterTaskUpdates.tasks).forEach(taskId => {
+        const task = boardAfterTaskUpdates.tasks[parseInt(taskId)];
+        if (task.labels && task.labels.includes(labelName)) {
+          // Remove the label from the task
+          task.labels = task.labels.filter(label => label !== labelName);
+          // Update task's updated timestamp
+          task.dates.updated = new Date().toISOString();
+          tasksUpdated = true;
+        }
+      });
+      
+      // Save the board with updated tasks if any were modified
+      if (tasksUpdated) {
+        boardAfterTaskUpdates.dates.updated = new Date().toISOString();
+        saveBoard(boardPath, boardAfterTaskUpdates);
+      }
+      
       res.json({ success: true, labelName });
     } catch (error) {
       console.error('Failed to remove label:', error);
