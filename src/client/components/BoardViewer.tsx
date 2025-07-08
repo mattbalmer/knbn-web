@@ -152,7 +152,17 @@ const BoardViewer: React.FC = () => {
           />
         );
       case 'manage':
-        return <ManageTab />;
+        return (
+          <ManageTab 
+            board={boardContent} 
+            boardPath={selectedBoard}
+            onBoardUpdate={() => {
+              if (selectedBoard) {
+                fetchBoardContent(selectedBoard);
+              }
+            }}
+          />
+        );
       default:
         return (
           <KanbanBoard 

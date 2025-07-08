@@ -1402,6 +1402,168 @@
   cursor: not-allowed;
 }
 
+/* Label Manager Styles */
+.label-manager-content {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.add-label-form {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.add-label-form h4 {
+  margin: 0 0 16px 0;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.labels-list h4 {
+  margin: 0 0 16px 0;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.no-labels {
+  color: #6c757d;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+.labels-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.label-item {
+  padding: 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background: #f8f9fa;
+}
+
+.label-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.label-preview {
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.85em;
+  font-weight: 500;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.label-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-edit {
+  background: #17a2b8;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-edit:hover:not(:disabled) {
+  background: #138496;
+}
+
+.btn-edit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.edit-label-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-label-form input[type="text"] {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.edit-label-form input[type="color"] {
+  width: 40px;
+  height: 32px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-label-form button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.manage-labels-button {
+  background: #6f42c1;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.manage-labels-button:hover {
+  background: #5a2d8c;
+  transform: translateY(-1px);
+}
+
+.manage-labels-button:active {
+  transform: translateY(0);
+}
+
+.manage-tab {
+  padding: 20px;
+}
+
+.manage-section {
+  margin-bottom: 32px;
+}
+
+.manage-section h3 {
+  margin: 0 0 16px 0;
+  color: #333;
+  font-size: 1.25em;
+  border-bottom: 2px solid #dee2e6;
+  padding-bottom: 8px;
+}
+
+.manage-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 /* Responsive Backlog Styles */
 @media (max-width: 768px) {
   .backlog-header {

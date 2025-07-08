@@ -4,6 +4,7 @@ import fs from 'fs';
 import { exec } from 'child_process';
 import { loadBoard, saveBoard, updateTask, createTask, KNBN_CORE_VERSION, KNBN_BOARD_VERSION } from './knbn';
 import { createBoard } from 'knbn-core/actions/board';
+import { addLabel, updateLabel, removeLabel, listLabels } from 'knbn-core/actions/label';
 import { version as KNBN_WEB_VERSION } from '../../package.json';
 import { getCWD } from './utils';
 
@@ -206,6 +207,102 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
     } catch (error) {
       console.error('Failed to delete task:', error);
       res.status(500).json({ error: 'Failed to delete task' });
+    }
+  });
+
+  // API endpoint to list labels in a board
+  app.get('/api/boards/:boardPath(*)/labels', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+      
+      const labels = listLabels(boardPath);
+      res.json(labels);
+    } catch (error) {
+      console.error('Failed to list labels:', error);
+      res.status(500).json({ error: 'Failed to list labels' });
+    }
+  });
+
+  // API endpoint to add a label to a board
+  app.post('/api/boards/:boardPath(*)/labels', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      const labelData = req.body;
+
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+
+      if (!labelData.name) {
+        return res.status(400).json({ error: 'Label name is required' });
+      }
+
+      const board = addLabel(boardPath, labelData);
+      const newLabel = board.labels?.find(l => l.name === labelData.name);
+      res.status(201).json(newLabel);
+    } catch (error) {
+      console.error('Failed to add label:', error);
+      if (error instanceof Error && error.message.includes('already exists')) {
+        res.status(409).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Failed to add label' });
+      }
+    }
+  });
+
+  // API endpoint to update a label in a board
+  app.put('/api/boards/:boardPath(*)/labels/:labelName', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      const labelName = decodeURIComponent(req.params.labelName);
+      const updates = req.body;
+
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+
+      const board = updateLabel(boardPath, labelName, updates);
+      const updatedLabel = board.labels?.find(l => l.name === (updates.name || labelName));
+      
+      if (!updatedLabel) {
+        return res.status(404).json({ error: 'Label not found' });
+      }
+
+      res.json(updatedLabel);
+    } catch (error) {
+      console.error('Failed to update label:', error);
+      if (error instanceof Error && error.message.includes('not found')) {
+        res.status(404).json({ error: error.message });
+      } else if (error instanceof Error && error.message.includes('already exists')) {
+        res.status(409).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Failed to update label' });
+      }
+    }
+  });
+
+  // API endpoint to remove a label from a board
+  app.delete('/api/boards/:boardPath(*)/labels/:labelName', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      const labelName = decodeURIComponent(req.params.labelName);
+
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+
+      const board = removeLabel(boardPath, labelName);
+      res.json({ success: true, labelName });
+    } catch (error) {
+      console.error('Failed to remove label:', error);
+      if (error instanceof Error && error.message.includes('not found')) {
+        res.status(404).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Failed to remove label' });
+      }
     }
   });
 
