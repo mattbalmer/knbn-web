@@ -337,15 +337,6 @@
   gap: 16px;
 }
 
-.header-center {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 20px;
-  justify-content: center;
-}
-
 .header-right {
   display: flex;
   align-items: center;
@@ -383,9 +374,6 @@
   border: 1px solid #ced4da;
   border-radius: 4px;
   background: white;
-  min-width: 300px;
-  max-width: 400px;
-  flex: 0 1 auto;
   overflow: hidden;
 }
 
@@ -401,8 +389,7 @@
   background: #f8f9fa;
   color: #6c757d;
   font-family: monospace;
-  flex: 1;
-  min-width: 0;
+  width: 220px;
 }
 
 .path-input-cwd:focus {
@@ -425,8 +412,7 @@
   border: none;
   background: white;
   color: #495057;
-  flex: 1;
-  min-width: 0;
+  width: 320px;
 }
 
 .path-input-relative:focus {

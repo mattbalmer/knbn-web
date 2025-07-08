@@ -227,14 +227,12 @@ const Header: React.FC<HeaderProps> = ({
     <header className="app-header">
       <div className="header-left">
         <h1 className="app-title">KnBn Board Viewer</h1>
-      </div>
-      
-      <div className="header-center">
         <div className="path-selector">
-          <span className="path-selector-label">Directory:</span>
+          {/*<span className="path-selector-label">Directory:</span>*/}
           <div className="path-input-wrapper">
             <div className="path-input-container">
               <input
+                id={'cwd-input'}
                 type="text"
                 value={cwd}
                 disabled
@@ -243,6 +241,7 @@ const Header: React.FC<HeaderProps> = ({
               />
               <span className="path-separator">/</span>
               <input
+                id={'dirpath-input'}
                 ref={pathInputRef}
                 type="text"
                 value={directoryPathInput}
@@ -258,10 +257,10 @@ const Header: React.FC<HeaderProps> = ({
             {showTypeahead && directories.length > 0 && (() => {
               const pathParts = directoryPathInput.split('/').filter(p => p.length > 0);
               const currentInput = pathParts[pathParts.length - 1] || '';
-              const filteredDirectories = directories.filter(dir => 
+              const filteredDirectories = directories.filter(dir =>
                 dir.toLowerCase().startsWith(currentInput.toLowerCase())
               );
-              
+
               return filteredDirectories.length > 0 && (
                 <div className="typeahead-dropdown">
                   {filteredDirectories.map((directory, index) => (
@@ -288,7 +287,7 @@ const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
         <div className="board-selector">
-          <span className="board-selector-label">Board:</span>
+          {/*<span className="board-selector-label">Board:</span>*/}
           {loadingBoards ? (
             <select disabled>
               <option>Loading boards...</option>
@@ -298,8 +297,8 @@ const Header: React.FC<HeaderProps> = ({
               <option>No .knbn files found</option>
             </select>
           ) : (
-            <select 
-              value={selectedBoard} 
+            <select
+              value={selectedBoard}
               onChange={(e) => onBoardSelect(e.target.value)}
             >
               <option value="">-- Select a board file --</option>
@@ -310,7 +309,7 @@ const Header: React.FC<HeaderProps> = ({
               ))}
             </select>
           )}
-          <button 
+          <button
             className="create-board-button"
             onClick={onCreateBoard}
             disabled={loadingBoards || hasNoBoards}
@@ -319,7 +318,7 @@ const Header: React.FC<HeaderProps> = ({
           </button>
         </div>
       </div>
-      
+
       <div className="header-right">
         <VersionTooltip versionInfo={versionInfo} />
       </div>
