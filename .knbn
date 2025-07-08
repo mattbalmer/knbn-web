@@ -4,7 +4,13 @@ columns:
   - name: todo
   - name: working
   - name: done
-labels: []
+labels:
+  - name: Feature
+    color: '#FF5733'
+  - name: Bug
+    color: '#33FF57'
+  - name: UX
+    color: '#3357FF'
 tasks:
   '1':
     id: 1
@@ -23,8 +29,9 @@ tasks:
     column: done
     dates:
       created: '2025-06-29T18:56:24.822Z'
-      updated: '2025-06-29T23:59:51.136Z'
+      updated: '2025-07-08T16:48:53.044Z'
       moved: '2025-06-29T23:59:51.136Z'
+    storyPoints: 8
   '3':
     id: 3
     title: Show Backlog in Backlog tab
@@ -49,9 +56,13 @@ tasks:
     description: ''
     dates:
       created: '2025-06-30T00:12:38.013Z'
-      updated: '2025-07-08T16:29:19.680Z'
+      updated: '2025-07-08T16:48:42.460Z'
       moved: '2025-07-08T16:29:19.680Z'
     column: todo
+    priority: 1
+    labels:
+      - Feature
+      - UX
   '6':
     id: 6
     title: Automatically open a browser to the URL on server start
@@ -68,7 +79,9 @@ tasks:
     column: todo
     dates:
       created: '2025-07-06T03:04:23.253Z'
-      updated: '2025-07-06T03:04:23.253Z'
+      updated: '2025-07-08T16:48:47.145Z'
+    priority: 3
+    storyPoints: 5
   '8':
     id: 8
     title: Allow backlog in create task dialog
@@ -96,8 +109,8 @@ sprints:
       ends: '2025-06-08T23:59:59Z'
 dates:
   created: '2025-06-29T00:00:00Z'
-  updated: '2025-07-08T16:29:19.680Z'
-  saved: '2025-07-08T16:29:19.680Z'
+  updated: '2025-07-08T16:48:53.044Z'
+  saved: '2025-07-08T16:48:53.044Z'
 metadata:
   nextId: 10
   version: '0.2'
