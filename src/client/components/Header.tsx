@@ -40,6 +40,7 @@ const Header: React.FC<HeaderProps> = ({
   const [directoryPath, setDirectoryPath] = useState<string>('');
   const [directoryPathInput, setDirectoryPathInput] = useState<string>('');
   const [cwd, setCwd] = useState<string>('');
+  const [lastValidPath, setLastValidPath] = useState<string>('');
   const [directories, setDirectories] = useState<string[]>([]);
   const [showTypeahead, setShowTypeahead] = useState(false);
   const [selectedTypeaheadIndex, setSelectedTypeaheadIndex] = useState(-1);
@@ -77,9 +78,17 @@ const Header: React.FC<HeaderProps> = ({
     if (initialDir) {
       setDirectoryPath(initialDir);
       setDirectoryPathInput(initialDir);
+      setLastValidPath(initialDir);
       onDirectoryChange(initialDir);
     }
   }, []);
+
+  useEffect(() => {
+    // Initialize lastValidPath to CWD when CWD is loaded
+    if (cwd && !lastValidPath) {
+      setLastValidPath('');
+    }
+  }, [cwd, lastValidPath]);
 
   useEffect(() => {
     // Cleanup timeout on unmount
@@ -125,9 +134,7 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   const handleDirectoryInputFocus = () => {
-    const pathParts = directoryPath.split('/').filter(p => p.length > 0);
-    const parentPath = pathParts.slice(0, -1).join('/');
-    fetchDirectories(parentPath);
+    fetchDirectories(lastValidPath);
     setShowTypeahead(true);
   };
 
@@ -137,14 +144,13 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   const handleTypeaheadSelect = (directory: string) => {
-    const pathParts = directoryPathInput.split('/').filter(p => p.length > 0);
-    const parentPath = pathParts.slice(0, -1);
-    const newPath = [...parentPath, directory].join('/') + '/';
+    const newPath = lastValidPath ? `${lastValidPath}/${directory}/` : `${directory}/`;
     setDirectoryPathInput(newPath);
-    setDirectoryPath(newPath);
-    updateUrlWithDirectory(newPath);
-    onDirectoryChange(newPath);
+    setLastValidPath(newPath);
     setShowTypeahead(false);
+    
+    // Validate and update - this will call parent callback since it's a complete path
+    validateAndUpdate(newPath);
     
     // Restore focus to input after selection
     setTimeout(() => {
@@ -155,8 +161,17 @@ const Header: React.FC<HeaderProps> = ({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!showTypeahead || directories.length === 0) return;
 
-    const pathParts = directoryPathInput.split('/').filter(p => p.length > 0);
-    const currentInput = pathParts[pathParts.length - 1] || '';
+    // Get the current input segment (what the user is typing)
+    const inputParts = directoryPathInput.split('/').filter(p => p.length > 0);
+    const lastValidParts = lastValidPath.split('/').filter(p => p.length > 0);
+    
+    let currentInput = '';
+    if (inputParts.length > lastValidParts.length) {
+      currentInput = inputParts[lastValidParts.length] || '';
+    } else if (directoryPathInput.endsWith('/')) {
+      currentInput = '';
+    }
+    
     const filteredDirectories = directories.filter(dir => 
       dir.toLowerCase().startsWith(currentInput.toLowerCase())
     );
@@ -197,24 +212,33 @@ const Header: React.FC<HeaderProps> = ({
       clearTimeout(validationTimeoutRef.current);
     }
     
-    // Get the parent directory for typeahead suggestions from validated path
-    const pathParts = directoryPath.split('/').filter(p => p.length > 0);
-    const parentPath = pathParts.join('/');
-    fetchDirectories(parentPath);
+    // Update last valid path if input ends with '/' (user is ready to go deeper)
+    if (inputValue.endsWith('/') && inputValue !== lastValidPath) {
+      setLastValidPath(inputValue);
+    }
+    
+    // Fetch directories for typeahead from last valid path
+    fetchDirectories(lastValidPath);
     
     // Show typeahead if there's partial input  
     const inputParts = inputValue.split('/').filter(p => p.length > 0);
     const currentInput = inputParts[inputParts.length - 1] || '';
     setShowTypeahead(currentInput.length > 0 || inputValue.endsWith('/'));
     
-    // Debounced validation - only validate if the path looks complete (ends with '/' or has no partial segment)
+    // Only validate and call parent callbacks for paths that are complete or empty
     if (inputValue === '' || inputValue.endsWith('/')) {
       // Immediate validation for empty or complete paths
       validateAndUpdate(inputValue);
     } else {
-      // Debounced validation for partial paths
-      validationTimeoutRef.current = setTimeout(() => {
-        validateAndUpdate(inputValue);
+      // For partial paths, only validate in background without calling parent
+      validationTimeoutRef.current = setTimeout(async () => {
+        const isValid = await validateDirectory(inputValue);
+        if (isValid) {
+          // Only update internal state, don't call parent yet
+          setDirectoryPath(inputValue);
+          updateUrlWithDirectory(inputValue);
+          setLastValidPath(inputValue);
+        }
       }, 500);
     }
   };
@@ -224,7 +248,10 @@ const Header: React.FC<HeaderProps> = ({
     if (isValid) {
       setDirectoryPath(path);
       updateUrlWithDirectory(path);
+      // Only call parent callback for valid, complete paths
       onDirectoryChange(path);
+      // Update last valid path when we have a valid directory
+      setLastValidPath(path);
     }
   };
 
@@ -259,8 +286,18 @@ const Header: React.FC<HeaderProps> = ({
               />
             </div>
             {showTypeahead && directories.length > 0 && (() => {
-              const pathParts = directoryPathInput.split('/').filter(p => p.length > 0);
-              const currentInput = pathParts[pathParts.length - 1] || '';
+              // Get the current input segment (what the user is typing)
+              const inputParts = directoryPathInput.split('/').filter(p => p.length > 0);
+              const lastValidParts = lastValidPath.split('/').filter(p => p.length > 0);
+              
+              // Find the current input segment by comparing with last valid path
+              let currentInput = '';
+              if (inputParts.length > lastValidParts.length) {
+                currentInput = inputParts[lastValidParts.length] || '';
+              } else if (directoryPathInput.endsWith('/')) {
+                currentInput = '';
+              }
+              
               const filteredDirectories = directories.filter(dir =>
                 dir.toLowerCase().startsWith(currentInput.toLowerCase())
               );
