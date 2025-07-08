@@ -171,22 +171,28 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
                   )}
                   
                   <div className="task-meta">
-                    <div className="task-dates">
-                      <span className="created-date">
-                        Created: {formatDate(task.dates.created)}
-                      </span>
-                      {task.dates.updated !== task.dates.created && (
-                        <span className="updated-date">
-                          Updated: {formatDate(task.dates.updated)}
+                    <div className="task-info-row">
+                      {task.priority && (
+                        <span className="task-priority">
+                          Priority: {task.priority}
                         </span>
                       )}
-                      {task.dates.moved && (
-                        <span className="moved-date">
-                          Moved: {formatDate(task.dates.moved)}
+                      {task.storyPoints && (
+                        <span className="task-story-points">
+                          {task.storyPoints} pts
                         </span>
                       )}
                     </div>
                     
+                    {task.labels && task.labels.length > 0 && (
+                      <div className="task-labels">
+                        {task.labels.map((label, index) => (
+                          <span key={index} className="task-label">
+                            {label}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
