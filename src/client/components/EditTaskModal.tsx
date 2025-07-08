@@ -106,8 +106,15 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
     }
   };
 
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    // Close modal if clicking on the overlay background
+    if (e.target === e.currentTarget) {
+      onCancel();
+    }
+  };
+
   return (
-    <div className="edit-task-overlay">
+    <div className="edit-task-overlay" onClick={handleOverlayClick}>
       <div className="edit-task-modal">
         <div className="modal-header">
           <h3>#{task.id} - {task.title}</h3>
