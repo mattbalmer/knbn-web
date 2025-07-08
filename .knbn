@@ -56,9 +56,9 @@ tasks:
     description: ''
     dates:
       created: '2025-06-30T00:12:38.013Z'
-      updated: '2025-07-08T17:29:12.731Z'
-      moved: '2025-07-08T16:29:19.680Z'
-    column: todo
+      updated: '2025-07-08T17:39:52.288Z'
+      moved: '2025-07-08T17:39:52.288Z'
+    column: done
     priority: 1
     labels:
       - Feature
@@ -109,8 +109,8 @@ sprints:
       ends: '2025-06-08T23:59:59Z'
 dates:
   created: '2025-06-29T00:00:00Z'
-  updated: '2025-07-08T17:29:12.731Z'
-  saved: '2025-07-08T17:29:12.733Z'
+  updated: '2025-07-08T17:39:52.288Z'
+  saved: '2025-07-08T17:39:52.288Z'
 metadata:
   nextId: 10
   version: '0.2'

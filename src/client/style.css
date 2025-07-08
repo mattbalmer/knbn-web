@@ -1649,6 +1649,100 @@
   margin: 0;
 }
 
+/* Task Label Management Styles */
+.task-labels-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.current-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 32px;
+  padding: 8px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background: #f8f9fa;
+}
+
+.task-label-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #6c757d;
+  color: white;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 500;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.remove-label-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0;
+  margin-left: 4px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.remove-label-btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.no-labels {
+  color: #6c757d;
+  font-style: italic;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+.available-labels {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.available-labels label {
+  font-size: 0.9em;
+  color: #495057;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.available-labels select {
+  padding: 4px 8px;
+  font-size: 0.9em;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background: white;
+  color: #495057;
+  cursor: pointer;
+  min-width: 150px;
+}
+
+.available-labels select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
 .create-label-button {
   background: #28a745;
   color: white;
