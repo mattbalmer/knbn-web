@@ -43,6 +43,7 @@ const Header: React.FC<HeaderProps> = ({
   const [directories, setDirectories] = useState<string[]>([]);
   const [showTypeahead, setShowTypeahead] = useState(false);
   const [selectedTypeaheadIndex, setSelectedTypeaheadIndex] = useState(-1);
+  const [cwdCollapsed, setCwdCollapsed] = useState(true);
   const pathInputRef = useRef<HTMLInputElement>(null);
   const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -62,6 +63,10 @@ const Header: React.FC<HeaderProps> = ({
       url.searchParams.delete('dir');
     }
     window.history.replaceState({}, '', url.toString());
+  };
+
+  const toggleCwdCollapsed = () => {
+    setCwdCollapsed(!cwdCollapsed);
   };
 
   useEffect(() => {
@@ -234,10 +239,11 @@ const Header: React.FC<HeaderProps> = ({
               <input
                 id={'cwd-input'}
                 type="text"
-                value={cwd}
+                value={cwdCollapsed ? '~' : cwd}
                 disabled
-                className="path-input-cwd"
-                title="Working directory where knbn-web was launched"
+                className={`path-input-cwd ${cwdCollapsed ? 'collapsed' : 'expanded'}`}
+                title={cwdCollapsed ? 'Click to expand full path' : 'Working directory where knbn-web was launched'}
+                onClick={toggleCwdCollapsed}
               />
               <span className="path-separator">/</span>
               <input
