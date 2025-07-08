@@ -281,8 +281,7 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
         let tasksUpdated = false;
         
         // Update tasks that have the old label name
-        Object.keys(boardAfterTaskUpdates.tasks).forEach(taskId => {
-          const task = boardAfterTaskUpdates.tasks[parseInt(taskId)];
+        Object.values(boardAfterTaskUpdates.tasks).forEach((task) => {
           if (task.labels && task.labels.includes(labelName)) {
             // Replace old label name with new label name
             task.labels = task.labels.map(label => 

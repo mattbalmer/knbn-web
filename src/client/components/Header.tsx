@@ -80,6 +80,8 @@ const Header: React.FC<HeaderProps> = ({
       setDirectoryPathInput(initialDir);
       setLastValidPath(initialDir);
       onDirectoryChange(initialDir);
+    } else {
+      onDirectoryChange('');
     }
   }, []);
 
