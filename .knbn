@@ -2,7 +2,7 @@ name: KnBn Web
 description: Development board for the KnBn Web viewer
 columns:
   - name: todo
-  - name: working
+  - name: in progress
   - name: done
 labels:
   - name: Feature
@@ -76,12 +76,15 @@ tasks:
     id: 7
     title: Show all boards in cwd recursively
     description: Optional dir dropdown too
-    column: todo
+    column: in progress
     dates:
       created: '2025-07-06T03:04:23.253Z'
-      updated: '2025-07-08T16:48:47.145Z'
+      updated: '2025-07-08T18:10:51.396Z'
+      moved: '2025-07-08T18:10:25.484Z'
     priority: 3
     storyPoints: 5
+    labels:
+      - Bug
   '8':
     id: 8
     title: Allow backlog in create task dialog
@@ -109,8 +112,8 @@ sprints:
       ends: '2025-06-08T23:59:59Z'
 dates:
   created: '2025-06-29T00:00:00Z'
-  updated: '2025-07-08T17:39:52.288Z'
-  saved: '2025-07-08T17:39:52.288Z'
+  updated: '2025-07-08T18:10:51.396Z'
+  saved: '2025-07-08T18:10:51.396Z'
 metadata:
   nextId: 10
   version: '0.2'
