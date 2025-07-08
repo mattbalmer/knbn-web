@@ -5,6 +5,7 @@ import { exec } from 'child_process';
 import { loadBoard, saveBoard, updateTask, createTask, KNBN_CORE_VERSION, KNBN_BOARD_VERSION } from './knbn';
 import { createBoard } from 'knbn-core/actions/board';
 import { addLabel, updateLabel, removeLabel, listLabels } from 'knbn-core/actions/label';
+import { createColumn, updateColumn, removeColumn, moveColumn, listColumns } from 'knbn-core/actions/column';
 import { version as KNBN_WEB_VERSION } from '../../package.json';
 import { getCWD } from './utils';
 
@@ -354,6 +355,194 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
         res.status(404).json({ error: error.message });
       } else {
         res.status(500).json({ error: 'Failed to remove label' });
+      }
+    }
+  });
+
+  // API endpoint to list columns in a board
+  app.get('/api/boards/:boardPath(*)/columns', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+      
+      const columns = listColumns(boardPath);
+      res.json(columns);
+    } catch (error) {
+      console.error('Failed to list columns:', error);
+      res.status(500).json({ error: 'Failed to list columns' });
+    }
+  });
+
+  // API endpoint to create a column in a board
+  app.post('/api/boards/:boardPath(*)/columns', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      const columnData = req.body;
+
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+
+      if (!columnData.name) {
+        return res.status(400).json({ error: 'Column name is required' });
+      }
+
+      // Prevent creating "backlog" column
+      if (columnData.name.toLowerCase() === 'backlog') {
+        return res.status(400).json({ error: 'Cannot create backlog column - it is virtual' });
+      }
+
+      const board = createColumn(boardPath, columnData, columnData.position);
+      const newColumn = board.columns?.find(c => c.name === columnData.name);
+      res.status(201).json(newColumn);
+    } catch (error) {
+      console.error('Failed to create column:', error);
+      if (error instanceof Error && error.message.includes('already exists')) {
+        res.status(409).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Failed to create column' });
+      }
+    }
+  });
+
+  // API endpoint to update a column in a board
+  app.put('/api/boards/:boardPath(*)/columns/:columnName', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      const columnName = decodeURIComponent(req.params.columnName);
+      const updates = req.body;
+
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+
+      // Prevent updating "backlog" column
+      if (columnName.toLowerCase() === 'backlog') {
+        return res.status(400).json({ error: 'Cannot update backlog column - it is virtual' });
+      }
+
+      // Check if column name is being changed
+      const isRenaming = updates.name && updates.name !== columnName;
+      
+      // Prevent renaming to "backlog"
+      if (isRenaming && updates.name.toLowerCase() === 'backlog') {
+        return res.status(400).json({ error: 'Cannot rename column to "backlog" - it is reserved' });
+      }
+
+      const board = updateColumn(boardPath, columnName, updates);
+      const updatedColumn = board.columns?.find(c => c.name === (updates.name || columnName));
+      
+      if (!updatedColumn) {
+        return res.status(404).json({ error: 'Column not found' });
+      }
+
+      // If column was renamed, update all tasks that reference the old column name
+      if (isRenaming) {
+        const boardAfterTaskUpdates = { ...board };
+        let tasksUpdated = false;
+        
+        // Update tasks that have the old column name
+        Object.values(boardAfterTaskUpdates.tasks).forEach((task) => {
+          if (task.column === columnName) {
+            task.column = updates.name;
+            task.dates.updated = new Date().toISOString();
+            tasksUpdated = true;
+          }
+        });
+        
+        // Save the board with updated tasks if any were modified
+        if (tasksUpdated) {
+          boardAfterTaskUpdates.dates.updated = new Date().toISOString();
+          saveBoard(boardPath, boardAfterTaskUpdates);
+        }
+      }
+
+      res.json(updatedColumn);
+    } catch (error) {
+      console.error('Failed to update column:', error);
+      if (error instanceof Error && error.message.includes('not found')) {
+        res.status(404).json({ error: error.message });
+      } else if (error instanceof Error && error.message.includes('already exists')) {
+        res.status(409).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Failed to update column' });
+      }
+    }
+  });
+
+  // API endpoint to move a column in a board
+  app.put('/api/boards/:boardPath(*)/columns/:columnName/move', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      const columnName = decodeURIComponent(req.params.columnName);
+      const { position } = req.body;
+
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+
+      // Prevent moving "backlog" column
+      if (columnName.toLowerCase() === 'backlog') {
+        return res.status(400).json({ error: 'Cannot move backlog column - it is virtual' });
+      }
+
+      if (typeof position !== 'number') {
+        return res.status(400).json({ error: 'Position must be a number' });
+      }
+
+      const board = moveColumn(boardPath, columnName, position);
+      const movedColumn = board.columns?.find(c => c.name === columnName);
+      
+      if (!movedColumn) {
+        return res.status(404).json({ error: 'Column not found' });
+      }
+
+      res.json({ success: true, column: movedColumn, columns: board.columns });
+    } catch (error) {
+      console.error('Failed to move column:', error);
+      if (error instanceof Error && error.message.includes('not found')) {
+        res.status(404).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Failed to move column' });
+      }
+    }
+  });
+
+  // API endpoint to remove a column from a board
+  app.delete('/api/boards/:boardPath(*)/columns/:columnName', (req, res) => {
+    try {
+      const boardPath = decodeURIComponent(req.params.boardPath);
+      const columnName = decodeURIComponent(req.params.columnName);
+
+      if (!fs.existsSync(boardPath) || !boardPath.endsWith('.knbn')) {
+        return res.status(404).json({ error: 'Board file not found' });
+      }
+
+      // Prevent deleting "backlog" column
+      if (columnName.toLowerCase() === 'backlog') {
+        return res.status(400).json({ error: 'Cannot delete backlog column - it is virtual' });
+      }
+
+      // Load board to check for tasks in the column
+      const initialBoard = loadBoard(boardPath);
+      const tasksInColumn = Object.values(initialBoard.tasks).filter(task => task.column === columnName);
+      
+      if (tasksInColumn.length > 0) {
+        return res.status(400).json({ 
+          error: `Cannot delete column "${columnName}" - it contains ${tasksInColumn.length} task(s). Move or delete the tasks first.` 
+        });
+      }
+
+      const board = removeColumn(boardPath, columnName);
+      res.json({ success: true, columnName });
+    } catch (error) {
+      console.error('Failed to remove column:', error);
+      if (error instanceof Error && error.message.includes('not found')) {
+        res.status(404).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Failed to remove column' });
       }
     }
   });
