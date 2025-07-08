@@ -18,7 +18,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const getTasksForColumn = (columnName: string): Task[] => {
-    if (columnName === 'Backlog') {
+    if (columnName.toLowerCase() === 'backlog') {
       return Object.values(tasks).filter(task => !task.column || task.column.toLowerCase() === 'backlog');
     }
     return Object.values(tasks).filter(task => task.column === columnName);
