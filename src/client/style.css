@@ -1518,29 +1518,6 @@
   transition: background 0.2s ease;
 }
 
-.manage-labels-button {
-  background: #6f42c1;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.manage-labels-button:hover {
-  background: #5a2d8c;
-  transform: translateY(-1px);
-}
-
-.manage-labels-button:active {
-  transform: translateY(0);
-}
 
 .manage-tab {
   padding: 20px;
@@ -1562,6 +1539,104 @@
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.labels-section {
+  margin-top: 16px;
+}
+
+.labels-header {
+  margin-bottom: 16px;
+}
+
+.create-label-button {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.create-label-button:hover {
+  background: #218838;
+  transform: translateY(-1px);
+}
+
+.create-label-button:active {
+  transform: translateY(0);
+}
+
+.labels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.label-card {
+  padding: 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.label-card:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.no-labels-message {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  padding: 40px 20px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.no-labels-message p {
+  margin: 0;
+}
+
+.color-input-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.color-input {
+  width: 60px;
+  height: 40px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.color-preview {
+  padding: 8px 12px;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.9em;
+  font-weight: 500;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  min-width: 120px;
+  text-align: center;
 }
 
 /* Responsive Backlog Styles */

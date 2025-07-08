@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Board } from '../knbn/types';
-import LabelManagerModal from './LabelManagerModal';
+import { Board, Label } from '../knbn/types';
+import LabelEditModal from './LabelEditModal';
 
 interface ManageTabProps {
   board: Board;
@@ -9,27 +9,64 @@ interface ManageTabProps {
 }
 
 const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }) => {
-  const [showLabelManager, setShowLabelManager] = useState(false);
+  const [editingLabel, setEditingLabel] = useState<Label | null>(null);
+  const [showNewLabelModal, setShowNewLabelModal] = useState(false);
 
-  const handleLabelsUpdated = () => {
+  const handleLabelSaved = () => {
+    setEditingLabel(null);
+    setShowNewLabelModal(false);
     onBoardUpdate();
   };
 
-  const handleCloseLabelManager = () => {
-    setShowLabelManager(false);
+  const handleCancelLabelEdit = () => {
+    setEditingLabel(null);
+    setShowNewLabelModal(false);
+  };
+
+  const handleLabelClick = (label: Label) => {
+    setEditingLabel(label);
+  };
+
+  const handleCreateNewLabel = () => {
+    setShowNewLabelModal(true);
   };
 
   return (
     <div className="manage-tab">
       <div className="manage-section">
-        <h3>Board Management</h3>
-        <div className="manage-actions">
-          <button
-            className="manage-labels-button"
-            onClick={() => setShowLabelManager(true)}
-          >
-            🏷️ Manage Labels
-          </button>
+        <h3>Labels</h3>
+        <div className="labels-section">
+          <div className="labels-header">
+            <button
+              className="create-label-button"
+              onClick={handleCreateNewLabel}
+            >
+              + Create New Label
+            </button>
+          </div>
+          
+          {board.labels && board.labels.length > 0 ? (
+            <div className="labels-grid">
+              {board.labels.map((label) => (
+                <div 
+                  key={label.name} 
+                  className="label-card"
+                  onClick={() => handleLabelClick(label)}
+                >
+                  <span 
+                    className="label-preview"
+                    style={{ backgroundColor: label.color || '#6c757d' }}
+                  >
+                    {label.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="no-labels-message">
+              <p>No labels created yet. Click "Create New Label" to get started.</p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -40,12 +77,12 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
         </div>
       </div>
 
-      {showLabelManager && (
-        <LabelManagerModal
-          board={board}
+      {(editingLabel || showNewLabelModal) && (
+        <LabelEditModal
+          label={editingLabel || undefined}
           boardPath={boardPath}
-          onLabelsUpdated={handleLabelsUpdated}
-          onCancel={handleCloseLabelManager}
+          onLabelSaved={handleLabelSaved}
+          onCancel={handleCancelLabelEdit}
         />
       )}
     </div>
