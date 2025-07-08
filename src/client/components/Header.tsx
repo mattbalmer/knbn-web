@@ -236,15 +236,13 @@ const Header: React.FC<HeaderProps> = ({
           {/*<span className="path-selector-label">Directory:</span>*/}
           <div className="path-input-wrapper">
             <div className="path-input-container">
-              <input
-                id={'cwd-input'}
-                type="text"
-                value={cwdCollapsed ? '~' : cwd}
-                disabled
+              <span
                 className={`path-input-cwd ${cwdCollapsed ? 'collapsed' : 'expanded'}`}
                 title={cwdCollapsed ? 'Click to expand full path' : 'Working directory where knbn-web was launched'}
                 onClick={toggleCwdCollapsed}
-              />
+              >
+                {cwdCollapsed ? '~' : cwd}
+              </span>
               <span className="path-separator">/</span>
               <input
                 id={'dirpath-input'}

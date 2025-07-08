@@ -6,6 +6,8 @@ module.exports = (env, argv) => {
   const isDev = argv.mode ? argv.mode === 'development' || argv.mode === 'dev' : true;
 
   return {
+    mode: isDev ? 'development' : 'production',
+    devtool: 'inline-source-map',
     entry: './src/client/index.tsx',
     output: {
       path: path.resolve(__dirname, 'dist/client'),
@@ -13,9 +15,6 @@ module.exports = (env, argv) => {
     },
     resolve: {
       extensions: ['.tsx', '.ts', '.js'],
-      alias: isDev ? {
-        'knbn': path.resolve(__dirname, './node_modules/knbn')
-      } : {},
     },
     module: {
       rules: [
