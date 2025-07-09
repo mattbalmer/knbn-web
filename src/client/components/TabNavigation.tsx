@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from './common/Button';
 
 export type TabType = 'backlog' | 'sprint' | 'all-tasks' | 'manage';
 
@@ -18,13 +19,14 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange })
   return (
     <div className="tab-navigation">
       {tabs.map((tab) => (
-        <button
+        <Button
           key={tab.id}
+          color="default"
           className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
           onClick={() => onTabChange(tab.id)}
         >
           {tab.label}
-        </button>
+        </Button>
       ))}
     </div>
   );

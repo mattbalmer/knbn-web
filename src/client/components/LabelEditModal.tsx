@@ -126,6 +126,7 @@ const LabelEditModal: React.FC<LabelEditModalProps> = ({
         <div className="modal-header">
           <h3>{isNewLabel ? 'Create New Label' : `Edit Label: ${label.name}`}</h3>
           <Button 
+            color="default"
             className="close-button"
             onClick={onCancel}
             type="button"
@@ -173,6 +174,7 @@ const LabelEditModal: React.FC<LabelEditModalProps> = ({
                 <Button
                   type="button"
                   onClick={handleDelete}
+                  color="danger"
                   className="btn-delete"
                   disabled={isSubmitting}
                 >
@@ -184,6 +186,7 @@ const LabelEditModal: React.FC<LabelEditModalProps> = ({
               <Button
                 type="button"
                 onClick={onCancel}
+                color="default"
                 className="btn-cancel"
                 disabled={isSubmitting}
               >
@@ -191,6 +194,7 @@ const LabelEditModal: React.FC<LabelEditModalProps> = ({
               </Button>
               <Button
                 type="submit"
+                color="primary"
                 className="btn-save"
                 disabled={isSubmitting || !name.trim()}
               >

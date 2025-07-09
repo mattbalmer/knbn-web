@@ -19,6 +19,7 @@ const VersionTooltip: React.FC<VersionTooltipProps> = ({ versionInfo }) => {
   return (
     <div className="version-tooltip-container">
       <Button
+        color="default"
         className="version-info-button"
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}

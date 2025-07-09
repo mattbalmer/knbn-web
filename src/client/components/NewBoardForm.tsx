@@ -87,6 +87,7 @@ const NewBoardForm: React.FC<NewBoardFormProps> = ({ onBoardCreated, onCancel })
             <Button
               type="button"
               onClick={onCancel}
+              color="default"
               className="btn-cancel"
               disabled={isSubmitting}
             >
@@ -94,6 +95,7 @@ const NewBoardForm: React.FC<NewBoardFormProps> = ({ onBoardCreated, onCancel })
             </Button>
             <Button
               type="submit"
+              color="primary"
               className="btn-create"
               disabled={isSubmitting}
             >

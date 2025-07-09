@@ -354,6 +354,7 @@ const Header: React.FC<HeaderProps> = ({
             </select>
           )}
           <Button
+            color="primary"
             className="create-board-button"
             onClick={onCreateBoard}
             disabled={loadingBoards || hasNoBoards}

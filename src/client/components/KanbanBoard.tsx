@@ -127,6 +127,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div></div>
         <Button 
+          color="primary"
           className="new-task-button"
           onClick={handleNewTaskClick}
         >
