@@ -2027,6 +2027,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"classnames-ts@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "classnames-ts@npm:1.0.2"
+  checksum: 10c0/2ffde16e1769f0fa9eed5b4bcbf5e0900f858674a64a4be6dbb05c4d04506293a79a91b1bc73491cd65cef401bfa49646c0090aac8bcb9552793c393d7e84c35
+  languageName: node
+  linkType: hard
+
 "cliui@npm:^8.0.1":
   version: 8.0.1
   resolution: "cliui@npm:8.0.1"
@@ -3793,6 +3800,7 @@ __metadata:
     "@types/node": "npm:^20.5.0"
     "@types/react": "npm:^18.2.0"
     "@types/react-dom": "npm:^18.2.0"
+    classnames-ts: "npm:^1.0.2"
     copy-webpack-plugin: "npm:^13.0.0"
     css-loader: "npm:^7.1.2"
     express: "npm:^4.18.2"
