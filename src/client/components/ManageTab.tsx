@@ -175,7 +175,7 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
                     </Button>
                     <Button 
                       onClick={() => handleColumnClick(column)}
-                      color="secondary"
+                      color="primary"
                     >
                       Edit
                     </Button>

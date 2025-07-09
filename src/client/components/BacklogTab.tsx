@@ -345,7 +345,7 @@ const BacklogTab: React.FC<BacklogTabProps> = ({ board, boardPath, onTaskUpdate 
               
               <div className="task-actions">
                 <Button 
-                  color="secondary"
+                  color="primary"
                   onClick={() => handleEditTask(task)}
                 >
                   Edit
