@@ -24,6 +24,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
   const [priority, setPriority] = useState(task.priority?.toString() || '');
   const [sprint, setSprint] = useState(task.sprint || '');
   const [storyPoints, setStoryPoints] = useState(task.storyPoints?.toString() || '');
+  const [labels, setLabels] = useState<string[]>(task.labels || []);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -33,7 +34,19 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
     setPriority(task.priority?.toString() || '');
     setSprint(task.sprint || '');
     setStoryPoints(task.storyPoints?.toString() || '');
+    setLabels(task.labels || []);
   }, [task]);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onCancel();
+      }
+    };
+    
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [onCancel]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +65,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
         priority: priority ? parseInt(priority) : undefined,
         sprint: sprint || undefined,
         storyPoints: storyPoints ? parseInt(storyPoints) : undefined,
+        labels: labels.length > 0 ? labels : undefined,
       };
 
       const response = await fetch(`/api/boards/${encodeURIComponent(boardPath)}/tasks/${task.id}`, {
@@ -95,11 +109,28 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
     }
   };
 
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    // Close modal if clicking on the overlay background
+    if (e.target === e.currentTarget) {
+      onCancel();
+    }
+  };
+
+  const handleAddLabel = (labelName: string) => {
+    if (labelName && !labels.includes(labelName)) {
+      setLabels([...labels, labelName]);
+    }
+  };
+
+  const handleRemoveLabel = (labelName: string) => {
+    setLabels(labels.filter(label => label !== labelName));
+  };
+
   return (
-    <div className="edit-task-overlay">
+    <div className="edit-task-overlay" onClick={handleOverlayClick}>
       <div className="edit-task-modal">
         <div className="modal-header">
-          <h3>Edit Task #{task.id}</h3>
+          <h3>#{task.id} - {task.title}</h3>
           <button 
             className="close-button"
             onClick={onCancel}
@@ -194,6 +225,59 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
                 min="0"
                 max="100"
               />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>Labels</label>
+            <div className="task-labels-manager">
+              <div className="current-labels">
+                {labels.length > 0 ? (
+                  labels.map((labelName, index) => {
+                    const labelColor = board.labels?.find(l => l.name === labelName)?.color;
+                    return (
+                      <span 
+                        key={index}
+                        className="task-label-item"
+                        style={labelColor ? { backgroundColor: labelColor } : {}}
+                      >
+                        {labelName}
+                        <button
+                          type="button"
+                          className="remove-label-btn"
+                          onClick={() => handleRemoveLabel(labelName)}
+                          title="Remove label"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    );
+                  })
+                ) : (
+                  <span className="no-labels">No labels assigned</span>
+                )}
+              </div>
+              
+              {board.labels && board.labels.length > 0 && (
+                <div className="available-labels">
+                  <label htmlFor="label-select">Add Label:</label>
+                  <select
+                    id="label-select"
+                    value=""
+                    onChange={(e) => handleAddLabel(e.target.value)}
+                  >
+                    <option value="">-- Select a label --</option>
+                    {board.labels
+                      .filter(label => !labels.includes(label.name))
+                      .map(label => (
+                        <option key={label.name} value={label.name}>
+                          {label.name}
+                        </option>
+                      ))
+                    }
+                  </select>
+                </div>
+              )}
             </div>
           </div>
 

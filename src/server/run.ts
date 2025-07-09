@@ -1,3 +1,3 @@
 import { startServer } from './index';
 
-startServer();
+startServer(9000, false);

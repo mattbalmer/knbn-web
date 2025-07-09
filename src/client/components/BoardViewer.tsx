@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import KanbanBoard from './KanbanBoard';
 import TabNavigation, { TabType } from './TabNavigation';
 import BacklogTab from './BacklogTab';
 import SprintTab from './SprintTab';
 import ManageTab from './ManageTab';
-import VersionTooltip from './VersionTooltip';
+import Header from './Header';
 import NewBoardForm from './NewBoardForm';
 import Spinner from './Spinner';
 import { Board } from '../knbn/types';
@@ -33,22 +33,25 @@ const BoardViewer: React.FC = () => {
   const [showNewBoardForm, setShowNewBoardForm] = useState(false);
 
   useEffect(() => {
-    fetchBoardFiles();
     fetchVersionInfo();
   }, []);
 
-  const fetchBoardFiles = async () => {
+  const fetchBoardFiles = async (path?: string) => {
     setLoadingBoards(true);
     try {
-      const response = await fetch('/api/boards');
-      if (!response.ok) throw new Error('Failed to fetch board files');
+      const url = path ? `/api/boards?path=${encodeURIComponent(path)}` : '/api/boards';
+      const response = await fetch(url);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch board files');
+      }
       const files = await response.json();
       setBoardFiles(files);
       if (!selectedBoard && files?.[0]) {
         handleBoardSelect(files[0].path);
       }
     } catch (err) {
-      setError('Failed to load board files');
+      setError(err instanceof Error ? err.message : 'Failed to load board files');
     } finally {
       setLoadingBoards(false);
     }
@@ -64,6 +67,7 @@ const BoardViewer: React.FC = () => {
       console.error('Failed to load version info:', err);
     }
   };
+
 
   const fetchBoardContent = async (boardPath: string) => {
     setLoading(true);
@@ -96,6 +100,14 @@ const BoardViewer: React.FC = () => {
 
   const handleCancelNewBoard = () => {
     setShowNewBoardForm(false);
+  };
+
+
+  const handleDirectoryChange = (path: string) => {
+    console.log('handleDirectoryChange', path);
+    setSelectedBoard('');
+    setBoardContent(null);
+    fetchBoardFiles(path);
   };
 
   const renderTabContent = () => {
@@ -140,7 +152,17 @@ const BoardViewer: React.FC = () => {
           />
         );
       case 'manage':
-        return <ManageTab />;
+        return (
+          <ManageTab 
+            board={boardContent} 
+            boardPath={selectedBoard}
+            onBoardUpdate={() => {
+              if (selectedBoard) {
+                fetchBoardContent(selectedBoard);
+              }
+            }}
+          />
+        );
       default:
         return (
           <KanbanBoard 
@@ -160,49 +182,15 @@ const BoardViewer: React.FC = () => {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <header className="app-header">
-        <div className="header-left">
-          <h1 className="app-title">KnBn Board Viewer</h1>
-        </div>
-        
-        <div className="header-center">
-          <div className="board-selector">
-            <span className="board-selector-label">Board:</span>
-            {loadingBoards ? (
-              <select disabled>
-                <option>Loading boards...</option>
-              </select>
-            ) : boardFiles.length === 0 ? (
-              <select disabled>
-                <option>No .knbn files found</option>
-              </select>
-            ) : (
-              <select 
-                value={selectedBoard} 
-                onChange={(e) => handleBoardSelect(e.target.value)}
-              >
-                <option value="">-- Select a board file --</option>
-                {boardFiles.map((file) => (
-                  <option key={file.path} value={file.path}>
-                    {file.name}
-                  </option>
-                ))}
-              </select>
-            )}
-            <button 
-              className="create-board-button"
-              onClick={handleCreateBoard}
-              disabled={loadingBoards || hasNoBoards}
-            >
-              + New Board
-            </button>
-          </div>
-        </div>
-        
-        <div className="header-right">
-          <VersionTooltip versionInfo={versionInfo} />
-        </div>
-      </header>
+      <Header
+        boardFiles={boardFiles}
+        selectedBoard={selectedBoard}
+        loadingBoards={loadingBoards}
+        versionInfo={versionInfo}
+        onDirectoryChange={handleDirectoryChange}
+        onBoardSelect={handleBoardSelect}
+        onCreateBoard={handleCreateBoard}
+      />
 
       {error && (
         <div style={{ 

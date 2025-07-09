@@ -25,7 +25,7 @@ const BacklogTab: React.FC<BacklogTabProps> = ({ board, boardPath, onTaskUpdate 
 
   const sortedAndFilteredTasks = useMemo(() => {
     let tasks = Object.values(board.tasks)
-      .filter(task => task.column === 'backlog' || !task.column);
+      .filter(task => !task.column || task.column.toLowerCase() === 'backlog');
 
     // Apply search filter
     if (searchTerm) {

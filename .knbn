@@ -2,9 +2,15 @@ name: KnBn Web
 description: Development board for the KnBn Web viewer
 columns:
   - name: todo
-  - name: working
+  - name: in progress
   - name: done
-labels: []
+labels:
+  - name: Feature
+    color: '#2caf2e'
+  - name: Bug
+    color: '#ad2e2e'
+  - name: UX
+    color: '#3357FF'
 tasks:
   '1':
     id: 1
@@ -23,8 +29,9 @@ tasks:
     column: done
     dates:
       created: '2025-06-29T18:56:24.822Z'
-      updated: '2025-06-29T23:59:51.136Z'
+      updated: '2025-07-08T16:48:53.044Z'
       moved: '2025-06-29T23:59:51.136Z'
+    storyPoints: 8
   '3':
     id: 3
     title: Show Backlog in Backlog tab
@@ -49,7 +56,13 @@ tasks:
     description: ''
     dates:
       created: '2025-06-30T00:12:38.013Z'
-      updated: '2025-06-30T00:12:38.013Z'
+      updated: '2025-07-08T17:39:52.288Z'
+      moved: '2025-07-08T17:39:52.288Z'
+    column: done
+    priority: 1
+    labels:
+      - Feature
+      - UX
   '6':
     id: 6
     title: Automatically open a browser to the URL on server start
@@ -63,10 +76,15 @@ tasks:
     id: 7
     title: Show all boards in cwd recursively
     description: Optional dir dropdown too
-    column: todo
+    column: in progress
     dates:
       created: '2025-07-06T03:04:23.253Z'
-      updated: '2025-07-06T03:04:23.253Z'
+      updated: '2025-07-08T18:10:51.396Z'
+      moved: '2025-07-08T18:10:25.484Z'
+    priority: 3
+    storyPoints: 5
+    labels:
+      - Bug
   '8':
     id: 8
     title: Allow backlog in create task dialog
@@ -91,11 +109,14 @@ sprints:
     dates:
       created: '2025-06-01T00:00:00Z'
       starts: '2025-06-01T00:00:00Z'
-      ends: '2025-06-08T23:59:59Z'
+  - name: Beta
+    dates:
+      created: '2025-07-08T18:18:47.511Z'
+      starts: '2025-07-08T18:18:47.511Z'
 dates:
   created: '2025-06-29T00:00:00Z'
-  updated: '2025-07-06T03:05:23.878Z'
-  saved: '2025-07-06T03:05:23.878Z'
+  updated: '2025-07-08T18:18:47.511Z'
+  saved: '2025-07-08T18:18:47.512Z'
 metadata:
   nextId: 10
   version: '0.2'
