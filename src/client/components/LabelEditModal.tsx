@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Label } from '../knbn/types';
+import { Button } from './common/Button';
 
 interface LabelEditModalProps {
   label?: Label; // undefined for new label
@@ -124,13 +125,13 @@ const LabelEditModal: React.FC<LabelEditModalProps> = ({
       <div className="edit-task-modal">
         <div className="modal-header">
           <h3>{isNewLabel ? 'Create New Label' : `Edit Label: ${label.name}`}</h3>
-          <button 
+          <Button 
             className="close-button"
             onClick={onCancel}
             type="button"
           >
             ×
-          </button>
+          </Button>
         </div>
         
         <form onSubmit={handleSubmit}>
@@ -169,32 +170,32 @@ const LabelEditModal: React.FC<LabelEditModalProps> = ({
           <div className="form-actions">
             <div className="form-actions-left">
               {!isNewLabel && (
-                <button
+                <Button
                   type="button"
                   onClick={handleDelete}
                   className="btn-delete"
                   disabled={isSubmitting}
                 >
                   Delete Label
-                </button>
+                </Button>
               )}
             </div>
             <div className="form-actions-right">
-              <button
+              <Button
                 type="button"
                 onClick={onCancel}
                 className="btn-cancel"
                 disabled={isSubmitting}
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
                 className="btn-save"
                 disabled={isSubmitting || !name.trim()}
               >
                 {isSubmitting ? 'Saving...' : (isNewLabel ? 'Create Label' : 'Save Changes')}
-              </button>
+              </Button>
             </div>
           </div>
         </form>

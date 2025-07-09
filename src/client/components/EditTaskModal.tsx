@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Board, Task } from '../knbn/types';
+import { Button } from './common/Button';
 
 interface EditTaskModalProps {
   task: Task;
@@ -131,13 +132,13 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
       <div className="edit-task-modal">
         <div className="modal-header">
           <h3>#{task.id} - {task.title}</h3>
-          <button 
+          <Button 
             className="close-button"
             onClick={onCancel}
             type="button"
           >
             ×
-          </button>
+          </Button>
         </div>
         
         <form onSubmit={handleSubmit}>
@@ -242,14 +243,14 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
                         style={labelColor ? { backgroundColor: labelColor } : {}}
                       >
                         {labelName}
-                        <button
+                        <Button
                           type="button"
                           className="remove-label-btn"
                           onClick={() => handleRemoveLabel(labelName)}
                           title="Remove label"
                         >
                           ×
-                        </button>
+                        </Button>
                       </span>
                     );
                   })
@@ -291,31 +292,31 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
           <div className="form-actions">
             <div className="form-actions-left">
               {onDelete && (
-                <button
+                <Button
                   type="button"
                   onClick={handleDelete}
                   className="btn-delete"
                 >
                   Delete Task
-                </button>
+                </Button>
               )}
             </div>
             <div className="form-actions-right">
-              <button
+              <Button
                 type="button"
                 onClick={onCancel}
                 className="btn-cancel"
                 disabled={isSubmitting}
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
                 className="btn-save"
                 disabled={isSubmitting || !title.trim()}
               >
                 {isSubmitting ? 'Saving...' : 'Save Changes'}
-              </button>
+              </Button>
             </div>
           </div>
         </form>

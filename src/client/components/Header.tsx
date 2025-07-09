@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import VersionTooltip from './VersionTooltip';
+import { Button } from './common/Button';
 
 interface BoardFile {
   name: string;
@@ -352,13 +353,13 @@ const Header: React.FC<HeaderProps> = ({
               ))}
             </select>
           )}
-          <button
+          <Button
             className="create-board-button"
             onClick={onCreateBoard}
             disabled={loadingBoards || hasNoBoards}
           >
             + New Board
-          </button>
+          </Button>
         </div>
       </div>
 

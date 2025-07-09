@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Board, Task } from '../knbn/types';
 import NewTaskForm from './NewTaskForm';
 import EditTaskModal from './EditTaskModal';
+import { Button } from './common/Button';
 
 interface KanbanBoardProps {
   board: Board;
@@ -125,12 +126,12 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
     <div className="kanban-board">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div></div>
-        <button 
+        <Button 
           className="new-task-button"
           onClick={handleNewTaskClick}
         >
           + New Task
-        </button>
+        </Button>
       </div>
 
       <div className="board-columns">

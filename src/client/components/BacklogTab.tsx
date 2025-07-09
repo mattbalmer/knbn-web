@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Board, Task } from '../knbn/types';
 import NewTaskForm from './NewTaskForm';
 import EditTaskModal from './EditTaskModal';
+import { Button } from './common/Button';
 
 interface BacklogTabProps {
   board: Board;
@@ -195,12 +196,12 @@ const BacklogTab: React.FC<BacklogTabProps> = ({ board, boardPath, onTaskUpdate 
             </select>
           </div>
 
-          <button 
+          <Button 
             className="new-task-button"
             onClick={() => setShowNewTaskForm(true)}
           >
             + New Task
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -208,7 +209,7 @@ const BacklogTab: React.FC<BacklogTabProps> = ({ board, boardPath, onTaskUpdate 
         <div className="bulk-actions">
           <div className="bulk-actions-header">
             <span>{selectedTasks.size} tasks selected</span>
-            <button 
+            <Button 
               className="clear-selection"
               onClick={() => {
                 setSelectedTasks(new Set());
@@ -216,7 +217,7 @@ const BacklogTab: React.FC<BacklogTabProps> = ({ board, boardPath, onTaskUpdate 
               }}
             >
               Clear Selection
-            </button>
+            </Button>
           </div>
           <div className="bulk-actions-controls">
             <div className="bulk-control-group">
@@ -343,12 +344,12 @@ const BacklogTab: React.FC<BacklogTabProps> = ({ board, boardPath, onTaskUpdate 
               </div>
               
               <div className="task-actions">
-                <button 
+                <Button 
                   className="edit-task-button"
                   onClick={() => handleEditTask(task)}
                 >
                   Edit
-                </button>
+                </Button>
                 
                 <select 
                   value={task.column} 

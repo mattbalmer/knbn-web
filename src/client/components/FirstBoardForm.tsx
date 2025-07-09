@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button } from './common/Button';
 
 interface NewBoardFormProps {
   onBoardCreated: () => void;
@@ -84,13 +85,13 @@ const FirstBoardForm: React.FC<NewBoardFormProps> = ({ onBoardCreated }) => {
         )}
 
         <div className="form-actions">
-          <button
+          <Button
             type="submit"
             className="btn-create"
             disabled={isSubmitting}
           >
             {isSubmitting ? 'Creating...' : 'Create Board'}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

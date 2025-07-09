@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Column } from '../knbn/types';
+import { Button } from './common/Button';
 
 interface ColumnEditModalProps {
   column?: Column; // undefined for new column
@@ -127,13 +128,13 @@ const ColumnEditModal: React.FC<ColumnEditModalProps> = ({
       <div className="edit-task-modal">
         <div className="modal-header">
           <h3>{isNewColumn ? 'Create New Column' : `Edit Column: ${column.name}`}</h3>
-          <button 
+          <Button 
             className="close-button"
             onClick={onCancel}
             type="button"
           >
             ×
-          </button>
+          </Button>
         </div>
         
         <form onSubmit={handleSubmit}>
@@ -156,32 +157,32 @@ const ColumnEditModal: React.FC<ColumnEditModalProps> = ({
           <div className="form-actions">
             <div className="form-actions-left">
               {!isNewColumn && (
-                <button
+                <Button
                   type="button"
                   onClick={handleDelete}
                   className="btn-delete"
                   disabled={isSubmitting}
                 >
                   Delete Column
-                </button>
+                </Button>
               )}
             </div>
             <div className="form-actions-right">
-              <button
+              <Button
                 type="button"
                 onClick={onCancel}
                 className="btn-cancel"
                 disabled={isSubmitting}
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
                 className="btn-save"
                 disabled={isSubmitting || !name.trim()}
               >
                 {isSubmitting ? 'Saving...' : (isNewColumn ? 'Create Column' : 'Save Changes')}
-              </button>
+              </Button>
             </div>
           </div>
         </form>

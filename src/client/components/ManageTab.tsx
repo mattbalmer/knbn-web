@@ -3,6 +3,7 @@ import { Board, Label, Column, Sprint } from '../knbn/types';
 import LabelEditModal from './LabelEditModal';
 import ColumnEditModal from './ColumnEditModal';
 import SprintEditModal from './SprintEditModal';
+import { Button } from './common/Button';
 
 interface ManageTabProps {
   board: Board;
@@ -136,12 +137,12 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
         <h3>Columns</h3>
         <div className="columns-section">
           <div className="columns-header">
-            <button
+            <Button
               className="create-column-button"
               onClick={handleCreateNewColumn}
             >
               + Create New Column
-            </button>
+            </Button>
           </div>
           
           {board.columns && board.columns.length > 0 ? (
@@ -156,28 +157,28 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
                     <span className="column-position">Position {index + 1}</span>
                   </div>
                   <div className="column-actions">
-                    <button 
+                    <Button 
                       onClick={() => handleMoveColumn(column.name, 'up')}
                       disabled={index === 0}
                       className="btn-move"
                       title="Move up"
                     >
                       ↑
-                    </button>
-                    <button 
+                    </Button>
+                    <Button 
                       onClick={() => handleMoveColumn(column.name, 'down')}
                       disabled={index === board.columns.length - 1}
                       className="btn-move"
                       title="Move down"
                     >
                       ↓
-                    </button>
-                    <button 
+                    </Button>
+                    <Button 
                       onClick={() => handleColumnClick(column)}
                       className="btn-edit"
                     >
                       Edit
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -194,12 +195,12 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
         <h3>Labels</h3>
         <div className="labels-section">
           <div className="labels-header">
-            <button
+            <Button
               className="create-label-button"
               onClick={handleCreateNewLabel}
             >
               + Create New Label
-            </button>
+            </Button>
           </div>
           
           {board.labels && board.labels.length > 0 ? (
@@ -231,12 +232,12 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
         <h3>Sprints</h3>
         <div className="sprints-section">
           <div className="sprints-header">
-            <button
+            <Button
               className="create-sprint-button"
               onClick={handleCreateNewSprint}
             >
               + Create New Sprint
-            </button>
+            </Button>
           </div>
           
           {board.sprints && board.sprints.length > 0 ? (

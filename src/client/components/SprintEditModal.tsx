@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Sprint } from '../knbn/types';
+import { Button } from './common/Button';
 
 interface SprintEditModalProps {
   sprint?: Sprint; // undefined for new sprint
@@ -133,13 +134,13 @@ const SprintEditModal: React.FC<SprintEditModalProps> = ({
       <div className="edit-task-modal">
         <div className="modal-header">
           <h3>{isNewSprint ? 'Create New Sprint' : `Edit Sprint: ${sprint.name}`}</h3>
-          <button 
+          <Button 
             className="close-button"
             onClick={onCancel}
             type="button"
           >
             ×
-          </button>
+          </Button>
         </div>
         
         <form onSubmit={handleSubmit}>
@@ -212,32 +213,32 @@ const SprintEditModal: React.FC<SprintEditModalProps> = ({
           <div className="form-actions">
             <div className="form-actions-left">
               {!isNewSprint && (
-                <button
+                <Button
                   type="button"
                   onClick={handleDelete}
                   className="btn-delete"
                   disabled={isSubmitting}
                 >
                   Delete Sprint
-                </button>
+                </Button>
               )}
             </div>
             <div className="form-actions-right">
-              <button
+              <Button
                 type="button"
                 onClick={onCancel}
                 className="btn-cancel"
                 disabled={isSubmitting}
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
                 className="btn-save"
                 disabled={isSubmitting || !name.trim()}
               >
                 {isSubmitting ? 'Saving...' : (isNewSprint ? 'Create Sprint' : 'Save Changes')}
-              </button>
+              </Button>
             </div>
           </div>
         </form>
