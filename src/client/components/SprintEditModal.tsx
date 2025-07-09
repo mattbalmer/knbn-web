@@ -136,7 +136,6 @@ const SprintEditModal: React.FC<SprintEditModalProps> = ({
           <h3>{isNewSprint ? 'Create New Sprint' : `Edit Sprint: ${sprint.name}`}</h3>
           <Button 
             color="default"
-            className="close-button"
             onClick={onCancel}
             type="button"
           >
@@ -218,7 +217,6 @@ const SprintEditModal: React.FC<SprintEditModalProps> = ({
                   type="button"
                   onClick={handleDelete}
                   color="danger"
-                  className="btn-delete"
                   disabled={isSubmitting}
                 >
                   Delete Sprint
@@ -230,7 +228,6 @@ const SprintEditModal: React.FC<SprintEditModalProps> = ({
                 type="button"
                 onClick={onCancel}
                 color="default"
-                className="btn-cancel"
                 disabled={isSubmitting}
               >
                 Cancel
@@ -238,7 +235,6 @@ const SprintEditModal: React.FC<SprintEditModalProps> = ({
               <Button
                 type="submit"
                 color="primary"
-                className="btn-save"
                 disabled={isSubmitting || !name.trim()}
               >
                 {isSubmitting ? 'Saving...' : (isNewSprint ? 'Create Sprint' : 'Save Changes')}

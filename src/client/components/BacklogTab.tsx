@@ -198,7 +198,6 @@ const BacklogTab: React.FC<BacklogTabProps> = ({ board, boardPath, onTaskUpdate 
 
           <Button 
             color="primary"
-            className="new-task-button"
             onClick={() => setShowNewTaskForm(true)}
           >
             + New Task
@@ -212,7 +211,6 @@ const BacklogTab: React.FC<BacklogTabProps> = ({ board, boardPath, onTaskUpdate 
             <span>{selectedTasks.size} tasks selected</span>
             <Button 
               color="default"
-              className="clear-selection"
               onClick={() => {
                 setSelectedTasks(new Set());
                 setShowBulkActions(false);
@@ -348,7 +346,6 @@ const BacklogTab: React.FC<BacklogTabProps> = ({ board, boardPath, onTaskUpdate 
               <div className="task-actions">
                 <Button 
                   color="secondary"
-                  className="edit-task-button"
                   onClick={() => handleEditTask(task)}
                 >
                   Edit

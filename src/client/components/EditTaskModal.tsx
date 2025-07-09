@@ -134,7 +134,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
           <h3>#{task.id} - {task.title}</h3>
           <Button 
             color="default"
-            className="close-button"
             onClick={onCancel}
             type="button"
           >
@@ -247,7 +246,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
                         <Button
                           type="button"
                           color="default"
-                          className="remove-label-btn"
                           onClick={() => handleRemoveLabel(labelName)}
                           title="Remove label"
                         >
@@ -298,7 +296,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
                   type="button"
                   onClick={handleDelete}
                   color="danger"
-                  className="btn-delete"
                 >
                   Delete Task
                 </Button>
@@ -309,7 +306,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
                 type="button"
                 onClick={onCancel}
                 color="default"
-                className="btn-cancel"
                 disabled={isSubmitting}
               >
                 Cancel
@@ -317,7 +313,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
               <Button
                 type="submit"
                 color="primary"
-                className="btn-save"
                 disabled={isSubmitting || !title.trim()}
               >
                 {isSubmitting ? 'Saving...' : 'Save Changes'}

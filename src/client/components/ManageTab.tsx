@@ -139,7 +139,6 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
           <div className="columns-header">
             <Button
               color="primary"
-              className="create-column-button"
               onClick={handleCreateNewColumn}
             >
               + Create New Column
@@ -162,7 +161,6 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
                       onClick={() => handleMoveColumn(column.name, 'up')}
                       disabled={index === 0}
                       color="default"
-                      className="btn-move"
                       title="Move up"
                     >
                       ↑
@@ -171,7 +169,6 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
                       onClick={() => handleMoveColumn(column.name, 'down')}
                       disabled={index === board.columns.length - 1}
                       color="default"
-                      className="btn-move"
                       title="Move down"
                     >
                       ↓
@@ -179,7 +176,6 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
                     <Button 
                       onClick={() => handleColumnClick(column)}
                       color="secondary"
-                      className="btn-edit"
                     >
                       Edit
                     </Button>
@@ -201,7 +197,6 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
           <div className="labels-header">
             <Button
               color="primary"
-              className="create-label-button"
               onClick={handleCreateNewLabel}
             >
               + Create New Label
@@ -239,7 +234,6 @@ const ManageTab: React.FC<ManageTabProps> = ({ board, boardPath, onBoardUpdate }
           <div className="sprints-header">
             <Button
               color="primary"
-              className="create-sprint-button"
               onClick={handleCreateNewSprint}
             >
               + Create New Sprint

@@ -130,7 +130,6 @@ const ColumnEditModal: React.FC<ColumnEditModalProps> = ({
           <h3>{isNewColumn ? 'Create New Column' : `Edit Column: ${column.name}`}</h3>
           <Button 
             color="default"
-            className="close-button"
             onClick={onCancel}
             type="button"
           >
@@ -162,7 +161,6 @@ const ColumnEditModal: React.FC<ColumnEditModalProps> = ({
                   type="button"
                   onClick={handleDelete}
                   color="danger"
-                  className="btn-delete"
                   disabled={isSubmitting}
                 >
                   Delete Column
@@ -174,7 +172,6 @@ const ColumnEditModal: React.FC<ColumnEditModalProps> = ({
                 type="button"
                 onClick={onCancel}
                 color="default"
-                className="btn-cancel"
                 disabled={isSubmitting}
               >
                 Cancel
@@ -182,7 +179,6 @@ const ColumnEditModal: React.FC<ColumnEditModalProps> = ({
               <Button
                 type="submit"
                 color="primary"
-                className="btn-save"
                 disabled={isSubmitting || !name.trim()}
               >
                 {isSubmitting ? 'Saving...' : (isNewColumn ? 'Create Column' : 'Save Changes')}

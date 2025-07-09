@@ -88,7 +88,6 @@ const FirstBoardForm: React.FC<NewBoardFormProps> = ({ onBoardCreated }) => {
           <Button
             type="submit"
             color="primary"
-            className="btn-create"
             disabled={isSubmitting}
           >
             {isSubmitting ? 'Creating...' : 'Create Board'}

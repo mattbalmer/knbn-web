@@ -102,7 +102,6 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({ board, boardPath, onTaskCreat
               type="button"
               onClick={onCancel}
               color="default"
-              className="btn-cancel"
               disabled={isSubmitting}
             >
               Cancel
@@ -110,7 +109,6 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({ board, boardPath, onTaskCreat
             <Button
               type="submit"
               color="primary"
-              className="btn-create"
               disabled={isSubmitting || !title.trim()}
             >
               {isSubmitting ? 'Creating...' : 'Create Task'}
