@@ -12,9 +12,9 @@
   "scripts": {
     "build": "tsc && npm run build:client",
     "build:client": "webpack --mode production",
-    "build:dev": "webpack --mode development --watch",
-    "start": "ts-node src/server/run.ts",
-    "start:watch": "ts-node-dev src/server/run.ts"
+    "dev:client": "webpack --mode development --watch",
+    "dev:server": "ts-node-dev src/server/run.ts",
+    "start": "ts-node src/server/run.ts"
   },
   "keywords": [
     "knbn",
@@ -40,6 +40,7 @@
     "copy-webpack-plugin": "^13.0.0",
     "css-loader": "^7.1.2",
     "jest": "^30.0.3",
+    "style-loader": "^4.0.0",
     "ts-jest": "^29.4.0",
     "ts-loader": "^9.4.4",
     "ts-node": "^10.9.1",
