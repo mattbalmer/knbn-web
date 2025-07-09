@@ -20,7 +20,6 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange })
       {tabs.map((tab) => (
         <button
           key={tab.id}
-          color="default"
           className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
           onClick={() => onTabChange(tab.id)}
         >
