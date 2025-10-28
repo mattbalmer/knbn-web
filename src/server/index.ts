@@ -8,7 +8,32 @@ import { addLabel, updateLabel, removeLabel, listLabels } from 'knbn-core/action
 import { createColumn, updateColumn, removeColumn, moveColumn, listColumns } from 'knbn-core/actions/column';
 import { addSprint, updateSprint, removeSprint, listSprints } from 'knbn-core/actions/sprint';
 import { version as KNBN_WEB_VERSION } from '../../package.json';
-import { findKnbnFilesRecursive, getCWD } from './utils';
+import { findKnbnFilesRecursiveUncached, getCWD } from './utils';
+
+// Simple in-memory cache
+const knbnFilesCache = new Map<string, {
+  data: Array<{ name: string; path: string }>
+}>();
+
+export function findKnbnFilesRecursive(dir: string): Array<{ name: string; path: string }> {
+  const cacheKey = `${dir}`;
+
+  // Check if we have a valid cached entry
+  const cached = knbnFilesCache.get(cacheKey);
+  if (cached) {
+    return cached.data;
+  }
+
+  // Cache miss or expired - fetch fresh data
+  const results = findKnbnFilesRecursiveUncached(dir);
+
+  // Store in cache
+  knbnFilesCache.set(cacheKey, {
+    data: results,
+  });
+
+  return results;
+}
 
 function openBrowser(url: string): void {
   const start = (process.platform === 'darwin' ? 'open' : 
