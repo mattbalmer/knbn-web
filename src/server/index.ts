@@ -716,11 +716,16 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
   // API endpoint to create a new board file
   app.post('/api/boards', (req, res) => {
     try {
-      const { name, description } = req.body;
+      const { name, description } = {
+        name: req.body.name || '',
+        description: req.body.description || '',
+      };
 
       // Create the board using knbn core function
       const filePath = path.join(getCWD(), `${name}.knbn`);
       const board = createBoard(filePath, { name, description });
+
+      knbnFilesCache.clear(); // Clear cache to reflect new board
       
       // Return the board info
       const fileName = path.basename(filePath);

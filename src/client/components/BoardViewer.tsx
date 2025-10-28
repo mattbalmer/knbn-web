@@ -129,6 +129,7 @@ const BoardViewer: React.FC = () => {
     setShowNewBoardForm(false);
     fetchBoardFiles({
       recursive,
+      force: true,
     });
   };
 
