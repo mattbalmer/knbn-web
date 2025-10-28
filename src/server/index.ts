@@ -15,7 +15,7 @@ const knbnFilesCache = new Map<string, {
   data: Array<{ name: string; path: string }>
 }>();
 
-export function findKnbnFilesRecursive(dir: string): Array<{ name: string; path: string }> {
+function findKnbnFilesRecursive(dir: string): Array<{ name: string; path: string }> {
   const cacheKey = `${dir}`;
 
   // Check if we have a valid cached entry
@@ -111,6 +111,7 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
     try {
       const cwd = getCWD();
       const requestedPath = req.query.path as string || '';
+      const force = req.query.force === 'true' || req.query.force === '1';
 
       // Validate and sanitize the path
       const sanitizedPath = requestedPath.replace(/\.\./g, '').replace(/^\/+/, '');
@@ -127,6 +128,12 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
       // Check if the directory exists
       if (!fs.existsSync(targetDir) || !fs.statSync(targetDir).isDirectory()) {
         return res.status(404).json({ error: 'Directory not found' });
+      }
+
+      // If force flag is set, clear the cache entry for this directory
+      if (force) {
+        const cacheKey = `${targetDir}`;
+        knbnFilesCache.delete(cacheKey);
       }
 
       const knbnFiles = findKnbnFilesRecursive(targetDir);
