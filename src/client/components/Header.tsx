@@ -265,7 +265,7 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <header className="app-header">
       <div className="header-left">
-        <h1 className="app-title">KnBn Board Viewer</h1>
+        <h1 className="app-title">KnBn</h1>
         <div className="path-selector">
           {/*<span className="path-selector-label">Directory:</span>*/}
           <div className="path-input-wrapper">
@@ -334,16 +334,6 @@ const Header: React.FC<HeaderProps> = ({
             })()}
           </div>
         </div>
-        <div className="recursive-toggle">
-          <label>
-            <input
-              type="checkbox"
-              checked={recursive}
-              onChange={(e) => onRecursiveChange(e.target.checked)}
-            />
-            <span>Recursive Search</span>
-          </label>
-        </div>
         <div className="board-selector">
           {/*<span className="board-selector-label">Board:</span>*/}
           {loadingBoards ? (
@@ -374,6 +364,17 @@ const Header: React.FC<HeaderProps> = ({
           >
             + New Board
           </Button>
+
+          <div className="recursive-toggle">
+            <label>
+              <input
+                type="checkbox"
+                checked={recursive}
+                onChange={(e) => onRecursiveChange(e.target.checked)}
+              />
+              <span>Recursive</span>
+            </label>
+          </div>
         </div>
       </div>
 

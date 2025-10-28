@@ -31,22 +31,27 @@ const BoardViewer: React.FC = () => {
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>('all-tasks');
   const [showNewBoardForm, setShowNewBoardForm] = useState(false);
-  const [recursive, setRecursive] = useState<boolean>(true);
+  const [recursive, setRecursive] = useState<boolean>(false);
 
   useEffect(() => {
     fetchVersionInfo();
   }, []);
 
-  const fetchBoardFiles = async (path?: string, recursiveSearch?: boolean) => {
+  const fetchBoardFiles = async ({ path, recursive, force }: {
+    path?: string;
+    recursive?: boolean;
+    force?: boolean;
+  } = {}) => {
     setLoadingBoards(true);
     try {
       const params = new URLSearchParams();
       if (path) {
         params.append('path', path);
       }
-      // Use the provided recursiveSearch parameter, or fall back to the state
-      const isRecursive = recursiveSearch !== undefined ? recursiveSearch : recursive;
-      params.append('recursive', isRecursive.toString());
+      params.append('recursive', recursive ? 'true' : 'false');
+      if (force) {
+        params.append('force', 'true');
+      }
 
       const url = `/api/boards?${params.toString()}`;
       const response = await fetch(url);
@@ -104,7 +109,9 @@ const BoardViewer: React.FC = () => {
 
   const handleBoardCreated = () => {
     setShowNewBoardForm(false);
-    fetchBoardFiles();
+    fetchBoardFiles({
+      recursive,
+    });
   };
 
   const handleCancelNewBoard = () => {
@@ -116,7 +123,7 @@ const BoardViewer: React.FC = () => {
     console.log('handleDirectoryChange', path);
     setSelectedBoard('');
     setBoardContent(null);
-    fetchBoardFiles(path);
+    fetchBoardFiles({ path, recursive });
   };
 
   const handleRecursiveChange = (isRecursive: boolean) => {
@@ -126,7 +133,7 @@ const BoardViewer: React.FC = () => {
     const currentPath = urlParams.get('dir') || '';
     setSelectedBoard('');
     setBoardContent(null);
-    fetchBoardFiles(currentPath, isRecursive);
+    fetchBoardFiles({ path: currentPath, recursive: isRecursive });
   };
 
   const renderTabContent = () => {

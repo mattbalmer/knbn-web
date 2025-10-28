@@ -114,7 +114,7 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
       const cwd = getCWD();
       const requestedPath = req.query.path as string || '';
       const force = req.query.force === 'true' || req.query.force === '1';
-      const recursive = req.query.recursive !== 'false' && req.query.recursive !== '0';
+      const recursive = req.query.recursive === 'true' || req.query.recursive === '1';
 
       // Validate and sanitize the path
       const sanitizedPath = requestedPath.replace(/\.\./g, '').replace(/^\/+/, '');
