@@ -368,9 +368,12 @@ const Header: React.FC<HeaderProps> = ({
             + New Board
           </Button>
 
-          <Tooltip content="Refresh board list (clears cache)">
+          <Tooltip
+            content="Refresh board list (clears cache)"
+            position="bottom"
+          >
             <Button
-              color="default"
+              color="primary"
               onClick={onRefresh}
               disabled={loadingBoards}
             >

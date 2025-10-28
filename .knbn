@@ -76,11 +76,11 @@ tasks:
     id: 7
     title: Show all boards in cwd recursively
     description: Optional dir dropdown too
-    column: in progress
+    column: done
     dates:
       created: '2025-07-06T03:04:23.253Z'
-      updated: '2025-07-08T18:10:51.396Z'
-      moved: '2025-07-08T18:10:25.484Z'
+      updated: '2025-10-28T15:46:46.938Z'
+      moved: '2025-10-28T15:46:46.938Z'
     priority: 3
     storyPoints: 5
     labels:
@@ -115,8 +115,8 @@ sprints:
       starts: '2025-07-08T18:18:47.511Z'
 dates:
   created: '2025-06-29T00:00:00Z'
-  updated: '2025-07-09T22:24:27.870Z'
-  saved: '2025-07-09T22:24:27.870Z'
+  updated: '2025-10-28T15:46:46.938Z'
+  saved: '2025-10-28T15:46:46.938Z'
 metadata:
   nextId: 10
   version: '0.2'
