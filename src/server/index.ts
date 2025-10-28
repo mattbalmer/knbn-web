@@ -8,7 +8,7 @@ import { addLabel, updateLabel, removeLabel, listLabels } from 'knbn-core/action
 import { createColumn, updateColumn, removeColumn, moveColumn, listColumns } from 'knbn-core/actions/column';
 import { addSprint, updateSprint, removeSprint, listSprints } from 'knbn-core/actions/sprint';
 import { version as KNBN_WEB_VERSION } from '../../package.json';
-import { getCWD } from './utils';
+import { findKnbnFilesRecursive, getCWD } from './utils';
 
 function openBrowser(url: string): void {
   const start = (process.platform === 'darwin' ? 'open' : 
@@ -81,37 +81,6 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
     }
   });
 
-  // Helper function to recursively find .knbn files
-  function findKnbnFilesRecursive(dir: string, baseDir: string): Array<{ name: string; path: string }> {
-    const results: Array<{ name: string; path: string }> = [];
-
-    try {
-      const entries = fs.readdirSync(dir, { withFileTypes: true });
-
-      for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name);
-
-        if (entry.isDirectory()) {
-          // Skip hidden directories
-          if (!entry.name.startsWith('.')) {
-            results.push(...findKnbnFilesRecursive(fullPath, baseDir));
-          }
-        } else if (entry.isFile() && entry.name.endsWith('.knbn')) {
-          // Calculate relative path from base directory
-          const relativePath = path.relative(baseDir, fullPath);
-          results.push({
-            name: relativePath,
-            path: fullPath
-          });
-        }
-      }
-    } catch (error) {
-      // Silently skip directories we can't read
-    }
-
-    return results;
-  }
-
   // API endpoint to list all .knbn files in current directory or specified path (recursively)
   app.get('/api/boards', (req, res) => {
     try {
@@ -135,7 +104,7 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
         return res.status(404).json({ error: 'Directory not found' });
       }
 
-      const knbnFiles = findKnbnFilesRecursive(targetDir, targetDir);
+      const knbnFiles = findKnbnFilesRecursive(targetDir);
       res.json(knbnFiles);
     } catch (error) {
       res.status(500).json({ error: 'Failed to list board files' });
