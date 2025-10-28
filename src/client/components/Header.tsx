@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import VersionTooltip from './VersionTooltip';
 import { Button } from './common/Button';
+import Tooltip from './common/Tooltip';
 
 interface BoardFile {
   name: string;
@@ -366,14 +367,16 @@ const Header: React.FC<HeaderProps> = ({
           </Button>
 
           <div className="recursive-toggle">
-            <label title="Enabling recursive mode searches all subdirectories, which can be quite slow">
-              <input
-                type="checkbox"
-                checked={recursive}
-                onChange={(e) => onRecursiveChange(e.target.checked)}
-              />
-              <span>Recursive</span>
-            </label>
+            <Tooltip content="Enabling recursive mode searches all subdirectories, which can be quite slow">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={recursive}
+                  onChange={(e) => onRecursiveChange(e.target.checked)}
+                />
+                <span>Recursive</span>
+              </label>
+            </Tooltip>
           </div>
         </div>
       </div>
