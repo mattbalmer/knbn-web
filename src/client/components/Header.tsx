@@ -366,7 +366,7 @@ const Header: React.FC<HeaderProps> = ({
           </Button>
 
           <div className="recursive-toggle">
-            <label>
+            <label title="Enabling recursive mode searches all subdirectories, which can be quite slow">
               <input
                 type="checkbox"
                 checked={recursive}
