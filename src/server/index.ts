@@ -8,15 +8,15 @@ import { addLabel, updateLabel, removeLabel, listLabels } from 'knbn-core/action
 import { createColumn, updateColumn, removeColumn, moveColumn, listColumns } from 'knbn-core/actions/column';
 import { addSprint, updateSprint, removeSprint, listSprints } from 'knbn-core/actions/sprint';
 import { version as KNBN_WEB_VERSION } from '../../package.json';
-import { findKnbnFilesRecursiveUncached, getCWD } from './utils';
+import { findKnbnFilesUncached, findKnbnFilesRecursiveUncached, getCWD } from './utils';
 
 // Simple in-memory cache
 const knbnFilesCache = new Map<string, {
   data: Array<{ name: string; path: string }>
 }>();
 
-function findKnbnFilesRecursive(dir: string): Array<{ name: string; path: string }> {
-  const cacheKey = `${dir}`;
+function findKnbnFiles(dir: string, recursive: boolean = true): Array<{ name: string; path: string }> {
+  const cacheKey = `${dir}:${recursive}`;
 
   // Check if we have a valid cached entry
   const cached = knbnFilesCache.get(cacheKey);
@@ -25,7 +25,9 @@ function findKnbnFilesRecursive(dir: string): Array<{ name: string; path: string
   }
 
   // Cache miss or expired - fetch fresh data
-  const results = findKnbnFilesRecursiveUncached(dir);
+  const results = recursive
+    ? findKnbnFilesRecursiveUncached(dir)
+    : findKnbnFilesUncached(dir);
 
   // Store in cache
   knbnFilesCache.set(cacheKey, {
@@ -106,12 +108,13 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
     }
   });
 
-  // API endpoint to list all .knbn files in current directory or specified path (recursively)
+  // API endpoint to list all .knbn files in current directory or specified path
   app.get('/api/boards', (req, res) => {
     try {
       const cwd = getCWD();
       const requestedPath = req.query.path as string || '';
       const force = req.query.force === 'true' || req.query.force === '1';
+      const recursive = req.query.recursive !== 'false' && req.query.recursive !== '0';
 
       // Validate and sanitize the path
       const sanitizedPath = requestedPath.replace(/\.\./g, '').replace(/^\/+/, '');
@@ -132,11 +135,11 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
 
       // If force flag is set, clear the cache entry for this directory
       if (force) {
-        const cacheKey = `${targetDir}`;
+        const cacheKey = `${targetDir}:${recursive}`;
         knbnFilesCache.delete(cacheKey);
       }
 
-      const knbnFiles = findKnbnFilesRecursive(targetDir);
+      const knbnFiles = findKnbnFiles(targetDir, recursive);
       res.json(knbnFiles);
     } catch (error) {
       res.status(500).json({ error: 'Failed to list board files' });
