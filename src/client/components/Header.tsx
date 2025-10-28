@@ -18,24 +18,28 @@ interface HeaderProps {
   boardFiles: BoardFile[];
   selectedBoard: string;
   loadingBoards: boolean;
-  
+  recursive: boolean;
+
   // Version info
   versionInfo: VersionInfo | null;
-  
+
   // Event handlers
   onDirectoryChange: (directoryPath: string) => void;
   onBoardSelect: (boardPath: string) => void;
   onCreateBoard: () => void;
+  onRecursiveChange: (recursive: boolean) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
   boardFiles,
   selectedBoard,
   loadingBoards,
+  recursive,
   versionInfo,
   onDirectoryChange,
   onBoardSelect,
-  onCreateBoard
+  onCreateBoard,
+  onRecursiveChange
 }) => {
   // Internal state for path/directory management
   const [directoryPath, setDirectoryPath] = useState<string>('');
@@ -329,6 +333,16 @@ const Header: React.FC<HeaderProps> = ({
               );
             })()}
           </div>
+        </div>
+        <div className="recursive-toggle">
+          <label>
+            <input
+              type="checkbox"
+              checked={recursive}
+              onChange={(e) => onRecursiveChange(e.target.checked)}
+            />
+            <span>Recursive Search</span>
+          </label>
         </div>
         <div className="board-selector">
           {/*<span className="board-selector-label">Board:</span>*/}

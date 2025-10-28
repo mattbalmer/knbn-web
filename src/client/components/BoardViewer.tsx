@@ -31,15 +31,24 @@ const BoardViewer: React.FC = () => {
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>('all-tasks');
   const [showNewBoardForm, setShowNewBoardForm] = useState(false);
+  const [recursive, setRecursive] = useState<boolean>(true);
 
   useEffect(() => {
     fetchVersionInfo();
   }, []);
 
-  const fetchBoardFiles = async (path?: string) => {
+  const fetchBoardFiles = async (path?: string, recursiveSearch?: boolean) => {
     setLoadingBoards(true);
     try {
-      const url = path ? `/api/boards?path=${encodeURIComponent(path)}` : '/api/boards';
+      const params = new URLSearchParams();
+      if (path) {
+        params.append('path', path);
+      }
+      // Use the provided recursiveSearch parameter, or fall back to the state
+      const isRecursive = recursiveSearch !== undefined ? recursiveSearch : recursive;
+      params.append('recursive', isRecursive.toString());
+
+      const url = `/api/boards?${params.toString()}`;
       const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json();
@@ -108,6 +117,16 @@ const BoardViewer: React.FC = () => {
     setSelectedBoard('');
     setBoardContent(null);
     fetchBoardFiles(path);
+  };
+
+  const handleRecursiveChange = (isRecursive: boolean) => {
+    setRecursive(isRecursive);
+    // Re-fetch board files with the new recursive setting
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPath = urlParams.get('dir') || '';
+    setSelectedBoard('');
+    setBoardContent(null);
+    fetchBoardFiles(currentPath, isRecursive);
   };
 
   const renderTabContent = () => {
@@ -186,10 +205,12 @@ const BoardViewer: React.FC = () => {
         boardFiles={boardFiles}
         selectedBoard={selectedBoard}
         loadingBoards={loadingBoards}
+        recursive={recursive}
         versionInfo={versionInfo}
         onDirectoryChange={handleDirectoryChange}
         onBoardSelect={handleBoardSelect}
         onCreateBoard={handleCreateBoard}
+        onRecursiveChange={handleRecursiveChange}
       />
 
       {error && (
