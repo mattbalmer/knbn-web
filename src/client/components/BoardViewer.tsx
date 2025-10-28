@@ -31,7 +31,25 @@ const BoardViewer: React.FC = () => {
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>('all-tasks');
   const [showNewBoardForm, setShowNewBoardForm] = useState(false);
-  const [recursive, setRecursive] = useState<boolean>(false);
+
+  // Initialize recursive from URL
+  const getRecursiveFromUrl = (): boolean => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const recursiveParam = urlParams.get('r');
+    return recursiveParam === 'true' || recursiveParam === '1';
+  };
+
+  const [recursive, setRecursive] = useState<boolean>(getRecursiveFromUrl());
+
+  const updateUrlWithRecursive = (isRecursive: boolean) => {
+    const url = new URL(window.location.href);
+    if (isRecursive) {
+      url.searchParams.set('r', '1');
+    } else {
+      url.searchParams.delete('r');
+    }
+    window.history.replaceState({}, '', url.toString());
+  };
 
   useEffect(() => {
     fetchVersionInfo();
@@ -128,6 +146,7 @@ const BoardViewer: React.FC = () => {
 
   const handleRecursiveChange = (isRecursive: boolean) => {
     setRecursive(isRecursive);
+    updateUrlWithRecursive(isRecursive);
     // Re-fetch board files with the new recursive setting
     const urlParams = new URLSearchParams(window.location.search);
     const currentPath = urlParams.get('dir') || '';
