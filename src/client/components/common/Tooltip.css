@@ -20,9 +20,9 @@
   line-height: 1.4;
   white-space: nowrap;
   position: relative;
-  max-width: 250px;
   word-wrap: break-word;
   white-space: normal;
+  min-width: 200px;
 }
 
 /* Top position (default) */
