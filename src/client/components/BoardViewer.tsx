@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import KanbanBoard from './KanbanBoard';
 import TabNavigation, { TabType } from './TabNavigation';
 import BacklogTab from './BacklogTab';
 import SprintTab from './SprintTab';
 import ManageTab from './ManageTab';
-import VersionTooltip from './VersionTooltip';
+import Header from './Header';
 import NewBoardForm from './NewBoardForm';
 import Spinner from './Spinner';
 import { Board } from '../knbn/types';
@@ -32,23 +32,58 @@ const BoardViewer: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('all-tasks');
   const [showNewBoardForm, setShowNewBoardForm] = useState(false);
 
+  // Initialize recursive from URL
+  const getRecursiveFromUrl = (): boolean => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const recursiveParam = urlParams.get('r');
+    return recursiveParam === 'true' || recursiveParam === '1';
+  };
+
+  const [recursive, setRecursive] = useState<boolean>(getRecursiveFromUrl());
+
+  const updateUrlWithRecursive = (isRecursive: boolean) => {
+    const url = new URL(window.location.href);
+    if (isRecursive) {
+      url.searchParams.set('r', '1');
+    } else {
+      url.searchParams.delete('r');
+    }
+    window.history.replaceState({}, '', url.toString());
+  };
+
   useEffect(() => {
-    fetchBoardFiles();
     fetchVersionInfo();
   }, []);
 
-  const fetchBoardFiles = async () => {
+  const fetchBoardFiles = async ({ path, recursive, force }: {
+    path?: string;
+    recursive?: boolean;
+    force?: boolean;
+  } = {}) => {
     setLoadingBoards(true);
     try {
-      const response = await fetch('/api/boards');
-      if (!response.ok) throw new Error('Failed to fetch board files');
+      const params = new URLSearchParams();
+      if (path) {
+        params.append('path', path);
+      }
+      params.append('recursive', recursive ? 'true' : 'false');
+      if (force) {
+        params.append('force', 'true');
+      }
+
+      const url = `/api/boards?${params.toString()}`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch board files');
+      }
       const files = await response.json();
       setBoardFiles(files);
       if (!selectedBoard && files?.[0]) {
         handleBoardSelect(files[0].path);
       }
     } catch (err) {
-      setError('Failed to load board files');
+      setError(err instanceof Error ? err.message : 'Failed to load board files');
     } finally {
       setLoadingBoards(false);
     }
@@ -64,6 +99,7 @@ const BoardViewer: React.FC = () => {
       console.error('Failed to load version info:', err);
     }
   };
+
 
   const fetchBoardContent = async (boardPath: string) => {
     setLoading(true);
@@ -91,11 +127,38 @@ const BoardViewer: React.FC = () => {
 
   const handleBoardCreated = () => {
     setShowNewBoardForm(false);
-    fetchBoardFiles();
+    fetchBoardFiles({
+      recursive,
+    });
   };
 
   const handleCancelNewBoard = () => {
     setShowNewBoardForm(false);
+  };
+
+
+  const handleDirectoryChange = (path: string) => {
+    console.log('handleDirectoryChange', path);
+    setSelectedBoard('');
+    setBoardContent(null);
+    fetchBoardFiles({ path, recursive });
+  };
+
+  const handleRecursiveChange = (isRecursive: boolean) => {
+    setRecursive(isRecursive);
+    updateUrlWithRecursive(isRecursive);
+    // Re-fetch board files with the new recursive setting
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPath = urlParams.get('dir') || '';
+    setSelectedBoard('');
+    setBoardContent(null);
+    fetchBoardFiles({ path: currentPath, recursive: isRecursive });
+  };
+
+  const handleRefresh = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPath = urlParams.get('dir') || '';
+    fetchBoardFiles({ path: currentPath, recursive, force: true });
   };
 
   const renderTabContent = () => {
@@ -140,7 +203,17 @@ const BoardViewer: React.FC = () => {
           />
         );
       case 'manage':
-        return <ManageTab />;
+        return (
+          <ManageTab 
+            board={boardContent} 
+            boardPath={selectedBoard}
+            onBoardUpdate={() => {
+              if (selectedBoard) {
+                fetchBoardContent(selectedBoard);
+              }
+            }}
+          />
+        );
       default:
         return (
           <KanbanBoard 
@@ -160,49 +233,18 @@ const BoardViewer: React.FC = () => {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <header className="app-header">
-        <div className="header-left">
-          <h1 className="app-title">KnBn Board Viewer</h1>
-        </div>
-        
-        <div className="header-center">
-          <div className="board-selector">
-            <span className="board-selector-label">Board:</span>
-            {loadingBoards ? (
-              <select disabled>
-                <option>Loading boards...</option>
-              </select>
-            ) : boardFiles.length === 0 ? (
-              <select disabled>
-                <option>No .knbn files found</option>
-              </select>
-            ) : (
-              <select 
-                value={selectedBoard} 
-                onChange={(e) => handleBoardSelect(e.target.value)}
-              >
-                <option value="">-- Select a board file --</option>
-                {boardFiles.map((file) => (
-                  <option key={file.path} value={file.path}>
-                    {file.name}
-                  </option>
-                ))}
-              </select>
-            )}
-            <button 
-              className="create-board-button"
-              onClick={handleCreateBoard}
-              disabled={loadingBoards || hasNoBoards}
-            >
-              + New Board
-            </button>
-          </div>
-        </div>
-        
-        <div className="header-right">
-          <VersionTooltip versionInfo={versionInfo} />
-        </div>
-      </header>
+      <Header
+        boardFiles={boardFiles}
+        selectedBoard={selectedBoard}
+        loadingBoards={loadingBoards}
+        recursive={recursive}
+        versionInfo={versionInfo}
+        onDirectoryChange={handleDirectoryChange}
+        onBoardSelect={handleBoardSelect}
+        onCreateBoard={handleCreateBoard}
+        onRecursiveChange={handleRecursiveChange}
+        onRefresh={handleRefresh}
+      />
 
       {error && (
         <div style={{ 

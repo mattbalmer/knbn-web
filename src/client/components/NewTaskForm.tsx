@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Board } from '../knbn/types';
+import { Button } from './common/Button';
 
 interface NewTaskFormProps {
   board: Board;
@@ -97,21 +98,21 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({ board, boardPath, onTaskCreat
 
 
           <div className="form-actions">
-            <button
+            <Button
               type="button"
               onClick={onCancel}
-              className="btn-cancel"
+              color="default"
               disabled={isSubmitting}
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="btn-create"
+              color="primary"
               disabled={isSubmitting || !title.trim()}
             >
               {isSubmitting ? 'Creating...' : 'Create Task'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Board, Task } from '../knbn/types';
 import NewTaskForm from './NewTaskForm';
+import EditTaskModal from './EditTaskModal';
+import { Button } from './common/Button';
 
 interface KanbanBoardProps {
   board: Board;
@@ -14,9 +16,10 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   const [draggedOver, setDraggedOver] = useState<string | null>(null);
   const [showNewTaskForm, setShowNewTaskForm] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const getTasksForColumn = (columnName: string): Task[] => {
-    if (columnName === 'Backlog') {
+    if (columnName.toLowerCase() === 'backlog') {
       return Object.values(tasks).filter(task => !task.column || task.column.toLowerCase() === 'backlog');
     }
     return Object.values(tasks).filter(task => task.column === columnName);
@@ -99,18 +102,36 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
     setShowNewTaskForm(false);
   };
 
+  const handleTaskClick = (task: Task) => {
+    setEditingTask(task);
+  };
+
+  const handleEditTaskComplete = () => {
+    setEditingTask(null);
+    onTaskUpdate?.();
+  };
+
+  const handleEditTaskCancel = () => {
+    setEditingTask(null);
+  };
+
+  const handleTaskDelete = () => {
+    setEditingTask(null);
+    onTaskUpdate?.();
+  };
+
   const columns = showBacklog ? [{ name: 'Backlog' }, ...(board.columns || [])] : (board.columns || []);
 
   return (
     <div className="kanban-board">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div></div>
-        <button 
-          className="new-task-button"
+        <Button 
+          color="primary"
           onClick={handleNewTaskClick}
         >
           + New Task
-        </button>
+        </Button>
       </div>
 
       <div className="board-columns">
@@ -138,6 +159,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
                   draggable
                   onDragStart={(e) => handleDragStart(e, task)}
                   onDragEnd={handleDragEnd}
+                  onClick={() => handleTaskClick(task)}
+                  style={{ cursor: 'pointer' }}
                 >
                   <div className="task-header">
                     <h4 className="task-title">{task.title}</h4>
@@ -149,22 +172,35 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
                   )}
                   
                   <div className="task-meta">
-                    <div className="task-dates">
-                      <span className="created-date">
-                        Created: {formatDate(task.dates.created)}
-                      </span>
-                      {task.dates.updated !== task.dates.created && (
-                        <span className="updated-date">
-                          Updated: {formatDate(task.dates.updated)}
+                    <div className="task-info-row">
+                      {task.priority && (
+                        <span className="task-priority">
+                          Priority: {task.priority}
                         </span>
                       )}
-                      {task.dates.moved && (
-                        <span className="moved-date">
-                          Moved: {formatDate(task.dates.moved)}
+                      {task.storyPoints && (
+                        <span className="task-story-points">
+                          {task.storyPoints} pts
                         </span>
                       )}
                     </div>
                     
+                    {task.labels && task.labels.length > 0 && (
+                      <div className="task-labels">
+                        {task.labels.map((labelName, index) => {
+                          const labelColor = board.labels?.find(l => l.name === labelName)?.color;
+                          return (
+                            <span 
+                              key={index} 
+                              className="task-label"
+                              style={labelColor ? { backgroundColor: labelColor } : {}}
+                            >
+                              {labelName}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -179,6 +215,17 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ board, boardPath, onTaskUpdat
           boardPath={boardPath}
           onTaskCreated={handleTaskCreated}
           onCancel={handleCancelNewTask}
+        />
+      )}
+
+      {editingTask && boardPath && (
+        <EditTaskModal
+          task={editingTask}
+          board={board}
+          boardPath={boardPath}
+          onTaskUpdated={handleEditTaskComplete}
+          onCancel={handleEditTaskCancel}
+          onDelete={handleTaskDelete}
         />
       )}
     </div>

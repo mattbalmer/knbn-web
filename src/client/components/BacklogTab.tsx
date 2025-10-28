@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Board, Task } from '../knbn/types';
 import NewTaskForm from './NewTaskForm';
 import EditTaskModal from './EditTaskModal';
+import { Button } from './common/Button';
 
 interface BacklogTabProps {
   board: Board;
@@ -25,7 +26,7 @@ const BacklogTab: React.FC<BacklogTabProps> = ({ board, boardPath, onTaskUpdate 
 
   const sortedAndFilteredTasks = useMemo(() => {
     let tasks = Object.values(board.tasks)
-      .filter(task => task.column === 'backlog' || !task.column);
+      .filter(task => !task.column || task.column.toLowerCase() === 'backlog');
 
     // Apply search filter
     if (searchTerm) {
@@ -195,12 +196,12 @@ const BacklogTab: React.FC<BacklogTabProps> = ({ board, boardPath, onTaskUpdate 
             </select>
           </div>
 
-          <button 
-            className="new-task-button"
+          <Button 
+            color="primary"
             onClick={() => setShowNewTaskForm(true)}
           >
             + New Task
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -208,15 +209,15 @@ const BacklogTab: React.FC<BacklogTabProps> = ({ board, boardPath, onTaskUpdate 
         <div className="bulk-actions">
           <div className="bulk-actions-header">
             <span>{selectedTasks.size} tasks selected</span>
-            <button 
-              className="clear-selection"
+            <Button 
+              color="default"
               onClick={() => {
                 setSelectedTasks(new Set());
                 setShowBulkActions(false);
               }}
             >
               Clear Selection
-            </button>
+            </Button>
           </div>
           <div className="bulk-actions-controls">
             <div className="bulk-control-group">
@@ -343,12 +344,12 @@ const BacklogTab: React.FC<BacklogTabProps> = ({ board, boardPath, onTaskUpdate 
               </div>
               
               <div className="task-actions">
-                <button 
-                  className="edit-task-button"
+                <Button 
+                  color="primary"
                   onClick={() => handleEditTask(task)}
                 >
                   Edit
-                </button>
+                </Button>
                 
                 <select 
                   value={task.column} 

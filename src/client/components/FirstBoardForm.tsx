@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button } from './common/Button';
 
 interface NewBoardFormProps {
   onBoardCreated: () => void;
@@ -60,7 +61,6 @@ const FirstBoardForm: React.FC<NewBoardFormProps> = ({ onBoardCreated }) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Leave empty to create .knbn"
-            autoFocus
           />
           <small className="form-help">
             If left empty, will create ".knbn". Otherwise creates "[name].knbn"
@@ -85,13 +85,13 @@ const FirstBoardForm: React.FC<NewBoardFormProps> = ({ onBoardCreated }) => {
         )}
 
         <div className="form-actions">
-          <button
+          <Button
             type="submit"
-            className="btn-create"
+            color="primary"
             disabled={isSubmitting}
           >
             {isSubmitting ? 'Creating...' : 'Create Board'}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

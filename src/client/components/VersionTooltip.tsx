@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button } from './common/Button';
 
 interface VersionInfo {
   knbnWeb: string;
@@ -17,15 +18,15 @@ const VersionTooltip: React.FC<VersionTooltipProps> = ({ versionInfo }) => {
 
   return (
     <div className="version-tooltip-container">
-      <button
-        className="version-info-button"
+      <Button
+        color="default"
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
         onClick={() => setShowTooltip(!showTooltip)}
         aria-label="Version Information"
       >
         ?
-      </button>
+      </Button>
       
       {showTooltip && (
         <div className="version-tooltip">
