@@ -136,6 +136,12 @@ const BoardViewer: React.FC = () => {
     fetchBoardFiles({ path: currentPath, recursive: isRecursive });
   };
 
+  const handleRefresh = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPath = urlParams.get('dir') || '';
+    fetchBoardFiles({ path: currentPath, recursive, force: true });
+  };
+
   const renderTabContent = () => {
     if (!boardContent) return null;
     
@@ -218,6 +224,7 @@ const BoardViewer: React.FC = () => {
         onBoardSelect={handleBoardSelect}
         onCreateBoard={handleCreateBoard}
         onRecursiveChange={handleRecursiveChange}
+        onRefresh={handleRefresh}
       />
 
       {error && (

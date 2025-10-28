@@ -29,6 +29,7 @@ interface HeaderProps {
   onBoardSelect: (boardPath: string) => void;
   onCreateBoard: () => void;
   onRecursiveChange: (recursive: boolean) => void;
+  onRefresh: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -40,7 +41,8 @@ const Header: React.FC<HeaderProps> = ({
   onDirectoryChange,
   onBoardSelect,
   onCreateBoard,
-  onRecursiveChange
+  onRecursiveChange,
+  onRefresh
 }) => {
   // Internal state for path/directory management
   const [directoryPath, setDirectoryPath] = useState<string>('');
@@ -365,6 +367,16 @@ const Header: React.FC<HeaderProps> = ({
           >
             + New Board
           </Button>
+
+          <Tooltip content="Refresh board list (clears cache)">
+            <Button
+              color="default"
+              onClick={onRefresh}
+              disabled={loadingBoards}
+            >
+              ⟳
+            </Button>
+          </Tooltip>
 
           <div className="recursive-toggle">
             <Tooltip
