@@ -81,36 +81,61 @@ export function startServer(port: number = 9000, shouldOpenBrowser: boolean = tr
     }
   });
 
-  // API endpoint to list all .knbn files in current directory or specified path
+  // Helper function to recursively find .knbn files
+  function findKnbnFilesRecursive(dir: string, baseDir: string): Array<{ name: string; path: string }> {
+    const results: Array<{ name: string; path: string }> = [];
+
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+
+        if (entry.isDirectory()) {
+          // Skip hidden directories
+          if (!entry.name.startsWith('.')) {
+            results.push(...findKnbnFilesRecursive(fullPath, baseDir));
+          }
+        } else if (entry.isFile() && entry.name.endsWith('.knbn')) {
+          // Calculate relative path from base directory
+          const relativePath = path.relative(baseDir, fullPath);
+          results.push({
+            name: relativePath,
+            path: fullPath
+          });
+        }
+      }
+    } catch (error) {
+      // Silently skip directories we can't read
+    }
+
+    return results;
+  }
+
+  // API endpoint to list all .knbn files in current directory or specified path (recursively)
   app.get('/api/boards', (req, res) => {
     try {
       const cwd = getCWD();
       const requestedPath = req.query.path as string || '';
-      
+
       // Validate and sanitize the path
       const sanitizedPath = requestedPath.replace(/\.\./g, '').replace(/^\/+/, '');
       const targetDir = path.join(cwd, sanitizedPath);
-      
+
       // Security check: ensure the target directory is within the CWD
       const resolvedTarget = path.resolve(targetDir);
       const resolvedCwd = path.resolve(cwd);
-      
+
       if (!resolvedTarget.startsWith(resolvedCwd)) {
         return res.status(403).json({ error: 'Access denied: Path outside working directory' });
       }
-      
+
       // Check if the directory exists
       if (!fs.existsSync(targetDir) || !fs.statSync(targetDir).isDirectory()) {
         return res.status(404).json({ error: 'Directory not found' });
       }
-      
-      const files = fs.readdirSync(targetDir);
-      const knbnFiles = files
-        .filter(file => file.endsWith('.knbn'))
-        .map(file => ({
-          name: file,
-          path: path.join(targetDir, file)
-        }));
+
+      const knbnFiles = findKnbnFilesRecursive(targetDir, targetDir);
       res.json(knbnFiles);
     } catch (error) {
       res.status(500).json({ error: 'Failed to list board files' });
